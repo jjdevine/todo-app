@@ -52,12 +52,6 @@ public class NewToDo extends JFrame implements ActionListener
 		panelComments.setPreferredSize(new Dimension(470,300));
 		panelButtons.setPreferredSize(new Dimension(470,35));
 		
-		/*panelHeader.setBorder(new LineBorder(Color.BLACK));
-		panelDesc.setBorder(new LineBorder(Color.BLACK));
-		panelPriority.setBorder(new LineBorder(Color.BLACK));
-		panelComments.setBorder(new LineBorder(Color.BLACK));
-		panelButtons.setBorder(new LineBorder(Color.BLACK));*/
-		
 		/*
 		 * header panel
 		 */
