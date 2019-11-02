@@ -43,7 +43,15 @@ public class GuiUtils {
         return panel;
     }
 
-    public static JComboBox createComboBox(int width, int height, String... options) {
+    public static JScrollPane wrapWithScrollPane(int width, int height, Component component) {
+        JScrollPane jsp = new JScrollPane(component);
+        jsp.setPreferredSize(new Dimension(width,height));
+        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        return jsp;
+    }
+
+    public static JComboBox createComboBox(int width, int height, Object... options) {
 
         JComboBox comboBox = new JComboBox(options);
         comboBox.setPreferredSize(new Dimension(width,height));
@@ -54,6 +62,15 @@ public class GuiUtils {
         JTextArea ta = new JTextArea();
         ta.setPreferredSize(new Dimension(width,height));
         ta.setBorder(new LineBorder(Color.BLACK));
+        ta.setLineWrap(true);
+        ta.setWrapStyleWord(true);
+        return ta;
+    }
+
+    public static JTextArea createJTextArea() {
+        JTextArea ta = new JTextArea();
+        ta.setLineWrap(true);
+        ta.setWrapStyleWord(true);
         return ta;
     }
 
@@ -72,6 +89,23 @@ public class GuiUtils {
 
     public static void showError(String message) {
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void showInformation(String message, String title) {
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static JLabel createJLabel(int width, int height, String text, int fontSize) {
+        JLabel label = new JLabel(text);
+        label.setPreferredSize(new Dimension(width, height));
+        label.setFont(new Font("Comic Sans MS", Font.PLAIN, fontSize));
+        return label;
+    }
+
+    public static void setNWDistanceFromParent(int x, int y, Component child, Container parent, SpringLayout layout) {
+        layout.putConstraint(SpringLayout.WEST, child, x, SpringLayout.WEST, parent);
+        layout.putConstraint(SpringLayout.NORTH, child, y, SpringLayout.NORTH, parent);
+        parent.add(child);
     }
 
     static class MaxCharKeyListener implements KeyListener

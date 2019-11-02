@@ -17,6 +17,7 @@ import toDo.data.*;
 import toDo.scheduled.AlertProcessor;
 import toDo.scheduled.AlertTimerTask;
 import toDo.scheduled.AutoSaveTimerTask;
+import toDo.scheduled.ScheduledToDoGui;
 import toDo.sorts.DescriptionSort;
 import toDo.sorts.PrioritySort;
 import toDo.utilities.*;
@@ -47,6 +48,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 	private JMenuItem newToDoMenuItem, exitMenuItem, aboutMenuItem, updateDescriptionsMenuItem, scheduledToDoMenuItem;
 	private JMenuItem deleteMenuItem, createBackupMenuItem, loadBackupMenuItem, archiveMenuItem;
 	private JMenuItem filterSortMenuItem, helpMenuItem, createAlertsMenuItem, viewAlertsMenuItem;
+	private JMenuItem createScheduledTodo, viewScheduledTodos;
 	private List<ToDoHolder> toDoList = new ArrayList<ToDoHolder>();
 	private List<ToDoHolder> toDoList_Filtered_Sorted = new ArrayList<ToDoHolder>();
 	private JLabel lPriority, lDescription, lCreateDate, lLastModified;
@@ -119,6 +121,8 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		filterSortMenuItem = new JMenuItem("Filtering & Sorting...");
 		createAlertsMenuItem = new JMenuItem("Create Alerts...");
 		viewAlertsMenuItem = new JMenuItem("View Alerts...");
+		createScheduledTodo = new JMenuItem("Create Scheduled To Do...");
+		viewScheduledTodos = new JMenuItem("View Scheduled To Dos...");
 		
 		menuBar.add(optionsMenu);
 		
@@ -127,12 +131,16 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		optionsMenu.add(filterSortMenuItem);
 		optionsMenu.add(createAlertsMenuItem);
 		optionsMenu.add(viewAlertsMenuItem);
+		optionsMenu.add(createScheduledTodo);
+		optionsMenu.add(viewScheduledTodos);
 		
 		updateDescriptionsMenuItem.addActionListener(this);
 		deleteMenuItem.addActionListener(this);
 		filterSortMenuItem.addActionListener(this);
 		createAlertsMenuItem.addActionListener(this);
 		viewAlertsMenuItem.addActionListener(this);
+		createScheduledTodo.addActionListener(this);
+		viewScheduledTodos.addActionListener(this);
 		
 		/*
 		 * Do ArchiveMenu
@@ -437,6 +445,10 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		else if(e.getSource() == helpMenuItem)
 		{
 			new HelpForm();
+		} else if(e.getSource() == createScheduledTodo) {
+			new ScheduledToDoGui();
+		} else if(e.getSource() == viewScheduledTodos) {
+
 		}
 		else
 		{
@@ -474,24 +486,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			}
 		}
 	}
-	
-	/**
-	 * method for testing purposes only - to be removed later
-	 *
-	 */
-	/*public void test()
-	{
-		ToDoItem testItem = new ToDoItem(ToDoItem.PRIORITY_HIGH, "test");
-		ToDoHolder testHolder = new ToDoHolder(testItem);
-		toDoList.add(testHolder);
-		
-		for (int x=2; x<=100; x++)
-		{
-			testItem = new ToDoItem(ToDoItem.PRIORITY_LOW, "test" + x);
-			testHolder = new ToDoHolder(testItem);
-			toDoList.add(testHolder);
-		}
-	}/**/
 	
 	public void refreshToDoDisplay()
 	{	
@@ -556,9 +550,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 * save to disk automatically
 		 */
 		ToDoFileIO.saveToDosAsFile(saveFile, ToDoUtilities.convertHolderListToItemList(toDoList));
-
-		//change window title:
-		//setTitle("To Do List - " + toDoList.size() + " active to do items");
 	}
 	
 	public JPanel createNewMainPanel()
@@ -575,9 +566,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		//newMainPanel.setPreferredSize(mainPanelSize);
 		newMainPanel.setBorder(new LineBorder(Color.BLACK));
 		newMainPanel.setLayout(sLayout);
-		
-		//order the list by priority
-		//toDoList = ToDoUtilities.orderByPriority(toDoList);
+
 		
 		/*
 		 * apply filters & then apply sorts
@@ -623,9 +612,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			ToDoHolder holder = (ToDoHolder)i.next();
 			
 			JPanel newRowPanel = holder.getAsJPanel();
-			
-			
-			
+
 			if(firstIteration)
 			{
 				sLayout.putConstraint(SpringLayout.NORTH, newMainPanel, 3, SpringLayout.NORTH, newRowPanel);

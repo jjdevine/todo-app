@@ -1,11 +1,8 @@
 package toDo.scheduled.panels;
 
-import toDo.scheduled.toDo.scheduled.models.WeeklyScheduledTodo;
-import toDo.utilities.GuiUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.EnumSet;
 
 public class WeeklySchedulePanel extends JPanel {
 
@@ -31,28 +28,35 @@ public class WeeklySchedulePanel extends JPanel {
         add(cbSunday);
     }
 
-    public EnumSet<WeeklyScheduledTodo.DaysOfWeek> getSelectedDays() {
-
-        EnumSet<WeeklyScheduledTodo.DaysOfWeek> selectedDays = EnumSet.noneOf(WeeklyScheduledTodo.DaysOfWeek.class);
-
-
-        if (cbMonday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.MONDAY);
-        } else if (cbTuesday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.TUESDAY);
-        } else if (cbWednesday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.WEDNESDAY);
-        } else if (cbThursday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.THURSDAY);
-        } else if (cbFriday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.FRIDAY);
-        } else if (cbSaturday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.SATURDAY);
-        } else if (cbSunday.isSelected()) {
-            selectedDays.add(WeeklyScheduledTodo.DaysOfWeek.SUNDAY);
-        }
-
-        return selectedDays;
+    public boolean isMondaySelected() {
+        return cbMonday.isSelected();
+    }
+    public boolean isTuesdaySelected() {
+        return cbTuesday.isSelected();
+    }
+    public boolean isWednesdaySelected() {
+        return cbWednesday.isSelected();
+    }
+    public boolean isThursdaySelected() {
+        return cbThursday.isSelected();
+    }
+    public boolean isFridaySelected() {
+        return cbFriday.isSelected();
+    }
+    public boolean isSaturdaySelected() {
+        return cbSaturday.isSelected();
+    }
+    public boolean isSundaySelected() {
+        return cbSunday.isSelected();
     }
 
+    public boolean isAtLeastOneDaySelected() {
+        return isMondaySelected()
+                || isTuesdaySelected()
+                || isWednesdaySelected()
+                || isThursdaySelected()
+                || isFridaySelected()
+                || isSaturdaySelected()
+                || isSundaySelected();
+    }
 }
