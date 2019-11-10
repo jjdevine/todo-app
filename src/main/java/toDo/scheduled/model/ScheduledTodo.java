@@ -152,4 +152,8 @@ public abstract class ScheduledTodo {
 
         return persistenceModel;
     }
+
+    public abstract String getFrequencyDescription();
+
+    public abstract String getScheduleDescription();
 }

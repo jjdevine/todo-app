@@ -2,6 +2,8 @@ package toDo.scheduled;
 
 import toDo.persistence.PersistenceManager;
 import toDo.persistence.PersistenceModel;
+import toDo.persistence.PersistenceUtils;
+import toDo.scheduled.model.MonthlyScheduledTodo;
 import toDo.scheduled.model.ScheduledTodo;
 import toDo.scheduled.model.WeeklyScheduledTodo;
 
@@ -11,11 +13,7 @@ import java.util.List;
 
 public class ScheduledToDoService {
 
-    public static void main(String[] args) throws Exception{
-        System.out.println(new ScheduledToDoService().loadAllScheduledToDos());
-    }
-
-    public List<ScheduledTodo> loadAllScheduledToDos() throws IOException {
+    public static List<ScheduledTodo> loadAllScheduledToDos() throws IOException {
 
         List<ScheduledTodo> results = new ArrayList<>();
         List<PersistenceModel> persistenceModels = PersistenceManager.loadAllPersistenceModelsByType(ScheduledTodo.PERSISTENCE_TYPE);
@@ -26,10 +24,15 @@ public class ScheduledToDoService {
                     results.add(new WeeklyScheduledTodo(model));
                     break;
                 case "toDo.scheduled.model.MonthlyScheduledTodo":
+                    results.add(new MonthlyScheduledTodo(model));
                     break;
             }
         }
 
         return results;
+    }
+
+    public static void deleteScheduledToDo(PersistenceModel model) throws IOException {
+        PersistenceManager.deletePersistenceModel(model);
     }
 }

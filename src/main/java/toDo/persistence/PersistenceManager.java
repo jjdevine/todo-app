@@ -56,7 +56,29 @@ public class PersistenceManager {
         }
 
         return persistenceModels;
+    }
 
+    public static void deletePersistenceModel(PersistenceModel persistenceModel) throws IOException{
+
+        File directory = getDirectoryForType(persistenceModel.getType());
+
+        File fileToDelete = null;
+
+        for(File file: directory.listFiles()) {
+            int underscoreIndex = file.getName().lastIndexOf("_");
+
+            if(underscoreIndex == -1) {
+                //not correct filename format, ignore
+                continue;
+            }
+
+            String id = file.getName().substring(underscoreIndex+1);
+
+            if (id.equals(persistenceModel.getId())) {
+                file.delete();
+                break;
+            }
+        }
     }
 
     private static File getDirectoryForType(String type) throws IOException {
@@ -83,8 +105,6 @@ public class PersistenceManager {
             StringBuilder currentPropertyValue = new StringBuilder();
 
             while((line = in.readLine()) != null) {
-
-                System.out.println(line);
 
                 switch (index) {
                     case 0:

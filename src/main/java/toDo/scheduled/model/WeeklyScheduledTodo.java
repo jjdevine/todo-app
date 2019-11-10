@@ -3,6 +3,8 @@ package toDo.scheduled.model;
 import toDo.persistence.PersistenceModel;
 import toDo.persistence.PersistenceUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class WeeklyScheduledTodo extends ScheduledTodo {
@@ -134,5 +136,50 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
         sb.append(", description='").append(description).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public String getFrequencyDescription() {
+        return "Every " + frequency + " week(s)";
+    }
+
+    @Override
+    public String getScheduleDescription() {
+        StringBuilder result = new StringBuilder("On ");
+
+        List<String> days = new ArrayList<>();
+
+        if(onMonday) {
+            days.add("Monday");
+        }
+        if(onTuesday) {
+            days.add("Tuesday");
+        }
+        if(onWednesday) {
+            days.add("Wednesday");
+        }
+        if(onThursday) {
+            days.add("Thursday");
+        }
+        if(onFriday) {
+            days.add("Friday");
+        }
+        if(onSaturday) {
+            days.add("Saturday");
+        }
+        if(onSunday) {
+            days.add("Sunday");
+        }
+
+        for(int x=0; x<days.size(); x++) {
+
+            if(x != 0) {
+                result.append(", ");
+            }
+
+            result.append(days.get(x));
+        }
+
+        return result.toString();
     }
 }

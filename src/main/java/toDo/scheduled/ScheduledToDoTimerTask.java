@@ -1,4 +1,11 @@
 package toDo.scheduled;
 
-public class ScheduledToDoTimerTask {
+import java.util.TimerTask;
+
+public class ScheduledToDoTimerTask extends TimerTask {
+
+    @Override
+    public void run() {
+        //TODO: implement this
+    }
 }

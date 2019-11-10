@@ -87,6 +87,26 @@ public class GuiUtils {
         return tf;
     }
 
+    public static JTextField createReadOnlyTextField(int width, int height, String text) {
+        JTextField tf = createJTextField(width, height);
+        tf.setText(text);
+        tf.setEditable(false);
+        tf.setBackground(Color.WHITE);
+        return tf;
+    }
+
+    public static JScrollPane createReadOnlyScrollingTextArea(int width, int height, String text) {
+
+        JTextArea ta = createJTextArea();
+        ta.setText(text);
+        ta.setEditable(false);
+        ta.setBackground(Color.WHITE);
+
+        JScrollPane jsp = wrapWithScrollPane(width, height, ta);
+
+        return jsp;
+    }
+
     public static void showError(String message) {
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
