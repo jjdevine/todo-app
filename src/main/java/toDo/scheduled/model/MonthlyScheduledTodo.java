@@ -96,4 +96,9 @@ public class MonthlyScheduledTodo extends ScheduledTodo {
 
         return result.toString();
     }
+
+    @Override
+    public void incrementNextFireDate() {
+
+    }
 }

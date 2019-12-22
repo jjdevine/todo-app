@@ -156,4 +156,6 @@ public abstract class ScheduledTodo {
     public abstract String getFrequencyDescription();
 
     public abstract String getScheduleDescription();
+
+    public abstract void incrementNextFireDate();
 }

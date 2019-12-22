@@ -1,6 +1,8 @@
 package toDo.utilities;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -689,7 +691,6 @@ public class ToDoUtilities
 	/**
 	 * get the archive number ie past_archive_<this>.data
 	 * @param f
-	 * @param f2
 	 * @return
 	 */
 	public static int getFileNum(File f)
@@ -853,5 +854,19 @@ public class ToDoUtilities
 		Matcher m = p.matcher(text);
 		
 		return m.matches();
+	}
+
+	public static LocalDate convertCalendarToLocalDate(Calendar cal) {
+		return LocalDate.of(
+				cal.get(Calendar.YEAR),
+				cal.get(Calendar.MONTH) + 1,
+				cal.get(Calendar.DAY_OF_MONTH));
+	}
+
+	public static String formatCalendar(Calendar cal) {
+		if(cal == null) {
+			return null;
+		}
+		return DateFormat.getDateTimeInstance().format(cal.getTime());
 	}
 }

@@ -2,8 +2,12 @@ package toDo.scheduled.model;
 
 import toDo.persistence.PersistenceModel;
 import toDo.persistence.PersistenceUtils;
+import toDo.utilities.ToDoUtilities;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -97,9 +101,6 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
         onFriday = PersistenceUtils.unmarshallBoolean(properties.get(PROPERTY_FRIDAY));
         onSaturday = PersistenceUtils.unmarshallBoolean(properties.get(PROPERTY_SATURDAY));
         onSunday = PersistenceUtils.unmarshallBoolean(properties.get(PROPERTY_SUNDAY));
-
-
-        //TODO: implement same for Monthly Todo, and then insert into scheduledToDoService.java
     }
 
     @Override
@@ -129,8 +130,8 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
         sb.append(", onSunday=").append(onSunday);
         sb.append(", id='").append(id).append('\'');
         sb.append(", frequency=").append(frequency);
-        sb.append(", startDate=").append(startDate);
-        sb.append(", endDate=").append(endDate);
+        sb.append(", startDate=").append(ToDoUtilities.formatCalendar(startDate));
+        sb.append(", endDate=").append(ToDoUtilities.formatCalendar(endDate));
         sb.append(", toDoPriority=").append(toDoPriority);
         sb.append(", title='").append(title).append('\'');
         sb.append(", description='").append(description).append('\'');
@@ -181,5 +182,138 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
         }
 
         return result.toString();
+    }
+
+    @Override
+    public void incrementNextFireDate() {
+
+        Calendar startDate = getNextFireDate();
+
+        if(startDate == null) {
+            startDate = getStartDate();
+            if(isDueToFireOnDate(ToDoUtilities.convertCalendarToLocalDate(startDate))) {
+
+            }
+        }
+//TODO finish this
+
+
+    }
+
+    private boolean isDueToFireOnDate(LocalDate date) {
+
+        LocalDate startDate = ToDoUtilities.convertCalendarToLocalDate(getStartDate());
+
+        if (date.isBefore(startDate)) {
+            return false;
+        }
+
+        if(!matchesScheduledDayOfWeek(date)) {
+            return false;
+        }
+
+        if(!matchesScheduledWeek(date)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * for testing
+     * @param args
+     */
+    public static void main(String[] args) {
+        WeeklyScheduledTodo todo = new WeeklyScheduledTodo();
+
+        Calendar startDate = Calendar.getInstance();
+        startDate.roll(Calendar.DAY_OF_YEAR, -10);
+
+        todo.setStartDate(startDate);
+        todo.setFrequency(4);
+        todo.setOnSaturday(true);
+        todo.setOnMonday(true);
+        todo.setOnSunday(true);
+
+        System.out.println(todo);
+
+
+        for(int days = -50; days<51; days++) {
+            LocalDate comparedTo = LocalDate.now().plusDays(days);
+            System.out.println("compared to " + comparedTo + " : " + todo.isDueToFireOnDate(comparedTo));
+        }
+
+        todo.setStartDate(Calendar.getInstance());
+    }
+
+    private boolean matchesScheduledWeek(LocalDate date) {
+        LocalDate startDate = ToDoUtilities.convertCalendarToLocalDate(getStartDate());
+        LocalDate dateToCheck = startDate;
+
+        while(!fallsInALaterWeek(dateToCheck, date)) {
+
+            if(inSameWeek(dateToCheck, date)) {
+                return true;
+            }
+
+            dateToCheck = dateToCheck.plusWeeks(getFrequency());
+        }
+
+        return false;
+    }
+
+    private boolean fallsInALaterWeek(LocalDate date, LocalDate dateInTargetWeek) {
+        return rollBackToMonday(date).isAfter(rollBackToMonday(dateInTargetWeek));
+    }
+
+    private boolean inSameWeek(LocalDate date1, LocalDate date2) {
+        /*
+        get the start and end date of the week date 1 falls in, and check if date 2 is between those dates
+         */
+
+        LocalDate date1Monday = rollBackToMonday(date1);
+        LocalDate date1Sunday = rollForwardToSunday(date1);
+
+        return date2.isEqual(date1Monday)
+                || date2.isEqual(date1Sunday)
+                || (date2.isBefore(date1Sunday) && date2.isAfter(date1Monday));
+    }
+
+    private LocalDate rollBackToMonday(LocalDate date) {
+        while(date.getDayOfWeek() != DayOfWeek.MONDAY) {
+            date = date.minusDays(1);
+        }
+
+        return date;
+    }
+
+    private LocalDate rollForwardToSunday(LocalDate date) {
+        while(date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            date = date.plusDays(1);
+        }
+
+        return date;
+    }
+
+    private boolean matchesScheduledDayOfWeek(LocalDate date) {
+        switch(date.getDayOfWeek()) {
+            case MONDAY:
+                return isOnMonday();
+            case TUESDAY:
+                return isOnTuesday();
+            case WEDNESDAY:
+                return isOnWednesday();
+            case THURSDAY:
+                return isOnThursday();
+            case FRIDAY:
+                return isOnFriday();
+            case SATURDAY:
+                return isOnSaturday();
+            case SUNDAY:
+                return isOnSunday();
+        }
+
+        System.out.println("toDo.scheduled.model.WeeklyScheduledTodo.matchesScheduledDayOfWeek - Unable to recognise day of the week!!");
+        return false;
     }
 }
