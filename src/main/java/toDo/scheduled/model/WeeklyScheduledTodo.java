@@ -4,6 +4,7 @@ import toDo.persistence.PersistenceModel;
 import toDo.persistence.PersistenceUtils;
 import toDo.utilities.ToDoUtilities;
 
+import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -185,24 +186,40 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
     }
 
     @Override
-    public void incrementNextFireDate() {
+    public boolean incrementNextFireDateIncludingToday() {
+        return incrementNextFireDate(LocalDate.now());
+    }
 
-        Calendar startDate = getNextFireDate();
+    @Override
+    public boolean incrementNextFireDateStartingTomorrow() {
+        return incrementNextFireDate(LocalDate.now().plusDays(1));
+    }
 
-        if(startDate == null) {
-            startDate = getStartDate();
-            if(isDueToFireOnDate(ToDoUtilities.convertCalendarToLocalDate(startDate))) {
+    public boolean incrementNextFireDate(LocalDate firstAvailableDate) {
 
+        LocalDate date;
+
+        //check next 3 years
+        for(int offset=0; offset<1096; offset++) {
+            date = firstAvailableDate.plusDays(offset);
+
+            if(isDueToFireOnDate(date)) {
+                nextFireDate = ToDoUtilities.getCalendarWithSameDate(getStartDate(), date);
+                System.out.println("next fire date = " + ToDoUtilities.formatDate(nextFireDate));
+                return true; //success
             }
         }
-//TODO finish this
 
-
+        return false; //no next increment - may have passed end date
     }
 
     private boolean isDueToFireOnDate(LocalDate date) {
 
         LocalDate startDate = ToDoUtilities.convertCalendarToLocalDate(getStartDate());
+
+        if(date.isAfter(ToDoUtilities.convertCalendarToLocalDate(getEndDate()))) {
+            return false;
+        }
 
         if (date.isBefore(startDate)) {
             return false;

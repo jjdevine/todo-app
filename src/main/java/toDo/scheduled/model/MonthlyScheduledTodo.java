@@ -98,7 +98,12 @@ public class MonthlyScheduledTodo extends ScheduledTodo {
     }
 
     @Override
-    public void incrementNextFireDate() {
+    public boolean incrementNextFireDateIncludingToday() {
+return false;
+    }
 
+    @Override
+    public boolean incrementNextFireDateStartingTomorrow() {
+return false;
     }
 }

@@ -4,6 +4,7 @@ import toDo.common.ToDoPriority;
 import toDo.persistence.PersistenceModel;
 import toDo.persistence.PersistenceUtils;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -157,5 +158,7 @@ public abstract class ScheduledTodo {
 
     public abstract String getScheduleDescription();
 
-    public abstract void incrementNextFireDate();
+    public abstract boolean incrementNextFireDateIncludingToday();
+
+    public abstract boolean incrementNextFireDateStartingTomorrow();
 }

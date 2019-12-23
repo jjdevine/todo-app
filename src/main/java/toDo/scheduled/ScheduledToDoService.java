@@ -2,7 +2,6 @@ package toDo.scheduled;
 
 import toDo.persistence.PersistenceManager;
 import toDo.persistence.PersistenceModel;
-import toDo.persistence.PersistenceUtils;
 import toDo.scheduled.model.MonthlyScheduledTodo;
 import toDo.scheduled.model.ScheduledTodo;
 import toDo.scheduled.model.WeeklyScheduledTodo;

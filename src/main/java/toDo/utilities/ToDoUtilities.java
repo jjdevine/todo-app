@@ -3,6 +3,10 @@ package toDo.utilities;
 import java.io.File;
 import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -868,5 +872,22 @@ public class ToDoUtilities
 			return null;
 		}
 		return DateFormat.getDateTimeInstance().format(cal.getTime());
+	}
+
+	public static void createNewToDoItem(ToDoItem item) {
+		Global.getMainGui().addToDo(new ToDoHolder(item));
+	}
+
+	public static Calendar getCalendarWithSameDate(Calendar template, LocalDate localDate) {
+		LocalDateTime localDateTime = localDate.atTime(template.get(Calendar.HOUR_OF_DAY), template.get(Calendar.MINUTE));
+
+		ZoneId zone = ZoneId.systemDefault();
+		ZoneOffset zoneOffSet = zone.getRules().getOffset(localDateTime);
+
+		Date date = Date.from(localDateTime.toInstant(zoneOffSet));
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(date.getTime());
+		return cal;
 	}
 }

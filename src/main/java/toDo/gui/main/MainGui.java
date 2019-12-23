@@ -18,6 +18,8 @@ import toDo.scheduled.AlertProcessor;
 import toDo.scheduled.AlertTimerTask;
 import toDo.scheduled.AutoSaveTimerTask;
 import toDo.scheduled.ScheduledToDoGui;
+import toDo.scheduled.ScheduledToDoTimerTask;
+import toDo.scheduled.ScheduledToDoViewGui;
 import toDo.sorts.DescriptionSort;
 import toDo.sorts.PrioritySort;
 import toDo.utilities.*;
@@ -259,6 +261,12 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 * schedule alert checking every minute
 		 */
 		alertTimer.scheduleAtFixedRate(new AlertTimerTask(processor), 1000 * 5, 1000 * 60);
+
+		/*
+		 * scheduled todo checking every 90 seconds
+		 */
+
+		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 10, 1000 * 10);
 		
 		//autosave every XX Minutes
 		
@@ -448,7 +456,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		} else if(e.getSource() == createScheduledTodo) {
 			new ScheduledToDoGui();
 		} else if(e.getSource() == viewScheduledTodos) {
-
+			new ScheduledToDoViewGui();
 		}
 		else
 		{

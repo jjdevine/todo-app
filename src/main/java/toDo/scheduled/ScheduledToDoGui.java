@@ -234,6 +234,8 @@ public class ScheduledToDoGui extends JFrame implements ActionListener {
                 return; //validation error
             }
 
+            scheduledTodo.incrementNextFireDateIncludingToday();
+
             try {
                 PersistenceManager.persist(scheduledTodo.toPersistenceModel());
                 GuiUtils.showInformation("Scheduled ToDo Created!", "Success");
