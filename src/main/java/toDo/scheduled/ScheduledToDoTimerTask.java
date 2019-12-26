@@ -34,14 +34,17 @@ public class ScheduledToDoTimerTask extends TimerTask {
                         processScheduledToDo(new WeeklyScheduledTodo(model));
                     break;
                 case "toDo.scheduled.model.MonthlyScheduledTodo":
-                        //processScheduledToDo(new MonthlyScheduledTodo(model));
+                        processScheduledToDo(new MonthlyScheduledTodo(model));
                     break;
             }
         }
-        //TODO: implement this
     }
 
     private void processScheduledToDo(ScheduledTodo scheduledTodo) {
+
+        if(scheduledTodo.getNextFireDate() == null) {
+            return; //shouldn't happen but ignore.
+        }
 
         if(scheduledTodo.getNextFireDate().before(Calendar.getInstance())) {
             ToDoItem toDoItem = new ToDoItem(scheduledTodo.getToDoPriority().getIndex(), scheduledTodo.getTitle());
@@ -58,8 +61,6 @@ public class ScheduledToDoTimerTask extends TimerTask {
     }
 
     private void updatePersistenceModelAfterFire(ScheduledTodo scheduledTodo) {
-        //TODO test this
-
         try {
             if (!scheduledTodo.incrementNextFireDateStartingTomorrow()) {
                 PersistenceManager.deletePersistenceModel(scheduledTodo.toPersistenceModel());

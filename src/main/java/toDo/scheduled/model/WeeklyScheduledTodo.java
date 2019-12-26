@@ -195,7 +195,7 @@ public class WeeklyScheduledTodo extends ScheduledTodo {
         return incrementNextFireDate(LocalDate.now().plusDays(1));
     }
 
-    public boolean incrementNextFireDate(LocalDate firstAvailableDate) {
+    private boolean incrementNextFireDate(LocalDate firstAvailableDate) {
 
         LocalDate date;
 

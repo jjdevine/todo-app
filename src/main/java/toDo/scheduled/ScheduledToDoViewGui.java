@@ -4,6 +4,7 @@ import toDo.persistence.PersistenceManager;
 import toDo.scheduled.model.ScheduledTodo;
 import toDo.utilities.FormatUtils;
 import toDo.utilities.GuiUtils;
+import toDo.utilities.ToDoUtilities;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -19,11 +20,11 @@ import java.util.stream.Collectors;
 
 public class ScheduledToDoViewGui extends JFrame implements ActionListener {
 
-    private int sWidth = 1200, sHeight = 808;
+    private int sWidth = 1350, sHeight = 808;
     private int panelWidth = sWidth - 25;
 
     private JPanel panelHeaders;
-    private JPanel pFrequency, pStartDate, pEndDate, pPriority, pTitle, pDescription, pSchedule;
+    private JPanel pFrequency, pStartDate, pEndDate, pPriority, pTitle, pDescription, pSchedule, pNextFireDate;
     private JScrollPane jspMain;
     private int col1X = 5;
     private int col2X = 125;
@@ -33,6 +34,7 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
     private int col6X = 605;
     private int col7X = 905;
     private int col8X = 1050;
+    private int col9X = 1200;
     private int colWidth = 145;
 
     private List<ScheduledTodo> scheduledTodos = new ArrayList<>();
@@ -57,6 +59,7 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
         pTitle = GuiUtils.createLabelPanel(col6X-col5X-margin, 40, 12, "Title");
         pDescription = GuiUtils.createLabelPanel(col7X-col6X-margin, 40, 12, "Description");
         pSchedule = GuiUtils.createLabelPanel(col8X-col7X-margin, 40, 12, "Schedule");
+        pNextFireDate = GuiUtils.createLabelPanel(col9X-col8X-margin, 40, 12, "Next Fire Date");
 
         int yMargin = 5;
         int offset = 5;
@@ -67,6 +70,7 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
         GuiUtils.setNWDistanceFromParent(offset+col5X, yMargin, pTitle, panelHeaders, layoutPanelHeaders);
         GuiUtils.setNWDistanceFromParent(offset+col6X, yMargin, pDescription, panelHeaders, layoutPanelHeaders);
         GuiUtils.setNWDistanceFromParent(offset+col7X, yMargin, pSchedule, panelHeaders, layoutPanelHeaders);
+        GuiUtils.setNWDistanceFromParent(offset+col8X, yMargin, pNextFireDate, panelHeaders, layoutPanelHeaders);
 
 
         /*
@@ -172,10 +176,14 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
                     GuiUtils.createReadOnlyScrollingTextArea(col8X - col7X - xMargin, elementHeight, scheduledTodo.getScheduleDescription()),
                     this, layout);
 
-            JButton bDelete = GuiUtils.createButtonWithListener(panelWidth - 30 - col8X - xMargin, elementHeight, "Delete", listener);
+            GuiUtils.setNWDistanceFromParent(col8X, yMargin,
+                    GuiUtils.createReadOnlyScrollingTextArea(col9X - col8X - xMargin, elementHeight, ToDoUtilities.formatCalendar(scheduledTodo.getNextFireDate())),
+                    this, layout);
+
+            JButton bDelete = GuiUtils.createButtonWithListener(panelWidth - 30 - col9X - xMargin, elementHeight, "Delete", listener);
             bDelete.setActionCommand(scheduledTodo.getId());
 
-            GuiUtils.setNWDistanceFromParent(col8X, yMargin, bDelete,this, layout);
+            GuiUtils.setNWDistanceFromParent(col9X, yMargin, bDelete,this, layout);
         }
     }
 

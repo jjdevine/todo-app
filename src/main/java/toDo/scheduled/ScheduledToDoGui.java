@@ -234,7 +234,10 @@ public class ScheduledToDoGui extends JFrame implements ActionListener {
                 return; //validation error
             }
 
-            scheduledTodo.incrementNextFireDateIncludingToday();
+            if(!scheduledTodo.incrementNextFireDateIncludingToday()) {
+                GuiUtils.showError("No fire date detected in next 3 years, try again");
+                return;
+            }
 
             try {
                 PersistenceManager.persist(scheduledTodo.toPersistenceModel());

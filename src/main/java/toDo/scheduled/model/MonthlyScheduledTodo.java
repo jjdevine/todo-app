@@ -1,8 +1,11 @@
 package toDo.scheduled.model;
 
+import toDo.persistence.PersistenceManager;
 import toDo.persistence.PersistenceModel;
 import toDo.persistence.PersistenceUtils;
+import toDo.utilities.ToDoUtilities;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,8 +65,8 @@ public class MonthlyScheduledTodo extends ScheduledTodo {
         sb.append("scheduledDays=").append(scheduledDays);
         sb.append(", id='").append(id).append('\'');
         sb.append(", frequency=").append(frequency);
-        sb.append(", startDate=").append(startDate);
-        sb.append(", endDate=").append(endDate);
+        sb.append(", startDate=").append(ToDoUtilities.formatCalendar(startDate));
+        sb.append(", endDate=").append(ToDoUtilities.formatCalendar(endDate));
         sb.append(", toDoPriority=").append(toDoPriority);
         sb.append(", title='").append(title).append('\'');
         sb.append(", description='").append(description).append('\'');
@@ -99,11 +102,119 @@ public class MonthlyScheduledTodo extends ScheduledTodo {
 
     @Override
     public boolean incrementNextFireDateIncludingToday() {
-return false;
+        return incrementNextFireDate(LocalDate.now());
     }
 
     @Override
     public boolean incrementNextFireDateStartingTomorrow() {
-return false;
+        return incrementNextFireDate(LocalDate.now().plusDays(1));
     }
+
+    private boolean incrementNextFireDate(LocalDate firstAvailableDate) {
+
+        LocalDate date;
+
+        //check next 3 years
+        for(int offset=0; offset<1096; offset++) {
+            date = firstAvailableDate.plusDays(offset);
+
+            if(isDueToFireOnDate(date)) {
+                nextFireDate = ToDoUtilities.getCalendarWithSameDate(getStartDate(), date);
+                System.out.println("next fire date = " + ToDoUtilities.formatDate(nextFireDate));
+                return true; //success
+            }
+        }
+
+        return false; //no next increment - may have passed end date
+    }
+
+    public static void main(String[] args) throws Exception {
+        LocalDate theDate = LocalDate.now().minusDays(50) ;
+
+        MonthlyScheduledTodo monthlyTodo =
+                new MonthlyScheduledTodo(
+                        PersistenceManager.loadAllPersistenceModelsByType("ScheduledToDo").get(0));
+
+        for(int offset =0; offset < 1200; offset++) {
+            System.out.println("Date is " + theDate + " - isDueToFire? " + monthlyTodo.isDueToFireOnDate(theDate));
+            theDate = theDate.plusDays(1);
+        }
+
+        System.out.println(monthlyTodo);
+
+    }
+
+    private boolean isDueToFireOnDate(LocalDate date) {
+
+        LocalDate startDate = ToDoUtilities.convertCalendarToLocalDate(getStartDate());
+
+        if(date.isAfter(ToDoUtilities.convertCalendarToLocalDate(getEndDate()))) {
+            return false;
+        }
+
+        if (date.isBefore(startDate)) {
+            return false;
+        }
+
+        if(!matchesScheduledDayOfMonth(date)) {
+            return false;
+        }
+
+        if(!matchesScheduledMonth(date)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean matchesScheduledDayOfMonth(LocalDate date) {
+
+        int dayOfMonth = date.getDayOfMonth();
+
+        for(Integer scheduledDay: getScheduledDays()) {
+            if(scheduledDay == dayOfMonth) {
+                return true;
+            }
+        }
+
+        return false;
+     }
+
+    private boolean matchesScheduledMonth(LocalDate date) {
+        LocalDate startDate = ToDoUtilities.convertCalendarToLocalDate(getStartDate());
+        LocalDate dateToCheck = startDate;
+
+        while(!fallsInLaterMonth(dateToCheck, date)) {
+
+            if(inSameMonth(dateToCheck, date)) {
+                return true;
+            }
+
+            dateToCheck = dateToCheck.plusMonths(getFrequency());
+        }
+
+        return false;
+    }
+
+    private boolean inSameMonth(LocalDate date1, LocalDate date2) {
+        if(date1.getYear() != date2.getYear()) {
+            return false;
+        }
+
+        return date1.getMonthValue() == date2.getMonthValue();
+    }
+
+    private boolean fallsInLaterMonth(LocalDate date, LocalDate dateInTargetMonth) {
+        if (date.getYear() > dateInTargetMonth.getYear()) {
+            return true;
+        }
+
+        if (date.getYear() < dateInTargetMonth.getYear()) {
+            return false;
+        }
+
+        return date.getMonthValue() > dateInTargetMonth.getMonthValue();
+
+    }
+
 }
