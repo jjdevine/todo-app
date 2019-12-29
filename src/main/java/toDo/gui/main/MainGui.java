@@ -266,7 +266,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 * scheduled todo checking every 90 seconds
 		 */
 
-		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 10, 1000 * 10);
+		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 90, 1000 * 10);
 		
 		//autosave every XX Minutes
 		

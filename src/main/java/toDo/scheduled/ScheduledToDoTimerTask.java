@@ -53,11 +53,9 @@ public class ScheduledToDoTimerTask extends TimerTask {
             ToDoUtilities.createNewToDoItem(toDoItem);
 
             updatePersistenceModelAfterFire(scheduledTodo);
-            GuiUtils.showInformation("Scheduled ToDo Created", "Created new Scheduled ToDo: " + scheduledTodo.getTitle());
+            GuiUtils.showInformation("Created new Scheduled ToDo: " + scheduledTodo.getTitle(), "Scheduled ToDo Created");
             return;
         }
-
-
     }
 
     private void updatePersistenceModelAfterFire(ScheduledTodo scheduledTodo) {
