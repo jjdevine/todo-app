@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import toDo.alert.Alert;
+import toDo.common.ToDoPriority;
 import toDo.data.*;
 import toDo.gui.customComponents.AlertHolder;
 import toDo.gui.customComponents.ToDoArchivedHolder;
@@ -874,8 +875,18 @@ public class ToDoUtilities
 		return DateFormat.getDateTimeInstance().format(cal.getTime());
 	}
 
-	public static void createNewToDoItem(ToDoItem item) {
-		Global.getMainGui().addToDo(new ToDoHolder(item));
+	public static void createNewToDoItem(String title, String description, ToDoPriority priority) {
+
+		ToDoItem toDoItem = new ToDoItem(priority.getIndex(), title);
+
+		StringBuilder audit = new StringBuilder();
+		audit.append("To Do Created from Schedule\n");
+		audit.append("Description : " + title + "\n");
+		audit.append("Priority : " + priority.name() + "\n");
+		audit.append("Comments : \n\n" + description);
+
+		toDoItem.addToLog(ToDoItem.LOG_AUDIT, audit.toString());
+		Global.getMainGui().addToDo(new ToDoHolder(toDoItem));
 	}
 
 	public static Calendar getCalendarWithSameDate(Calendar template, LocalDate localDate) {

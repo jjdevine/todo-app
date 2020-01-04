@@ -1,6 +1,7 @@
 package toDo.scheduled;
 
 import toDo.data.ToDoItem;
+import toDo.gui.customComponents.ToDoHolder;
 import toDo.persistence.PersistenceManager;
 import toDo.persistence.PersistenceModel;
 import toDo.scheduled.model.MonthlyScheduledTodo;
@@ -42,18 +43,26 @@ public class ScheduledToDoTimerTask extends TimerTask {
 
     private void processScheduledToDo(ScheduledTodo scheduledTodo) {
 
+        System.out.println("Processing scheduled todos - " + scheduledTodo.getTitle());
+
         if(scheduledTodo.getNextFireDate() == null) {
             return; //shouldn't happen but ignore.
         }
 
         if(scheduledTodo.getNextFireDate().before(Calendar.getInstance())) {
+
+            System.out.println("Scheduled Todo firing - " + scheduledTodo.getTitle());
+
             ToDoItem toDoItem = new ToDoItem(scheduledTodo.getToDoPriority().getIndex(), scheduledTodo.getTitle());
-            toDoItem.addToLog(ToDoItem.LOG_AUDIT, "To Do item generated from schedule");
-            toDoItem.addToLog(ToDoItem.LOG_AUDIT, toDoItem.getDescription());
-            ToDoUtilities.createNewToDoItem(toDoItem);
+
+            ToDoUtilities.createNewToDoItem(
+                    scheduledTodo.getTitle(),
+                    scheduledTodo.getDescription(),
+                    scheduledTodo.getToDoPriority());
 
             updatePersistenceModelAfterFire(scheduledTodo);
             GuiUtils.showInformation("Created new Scheduled ToDo: " + scheduledTodo.getTitle(), "Scheduled ToDo Created");
+
             return;
         }
     }
