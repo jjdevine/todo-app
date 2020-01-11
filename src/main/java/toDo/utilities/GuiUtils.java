@@ -17,6 +17,14 @@ public class GuiUtils {
         return panel;
     }
 
+    public static JPanel createUnborderedPanel(int width, int height) {
+
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(width, height));
+        return panel;
+    }
+
+
     public static JPanel createRedBorderedPanel(int width, int height) {
 
         JPanel panel = createBorderedPanel(width, height);

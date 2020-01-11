@@ -27,7 +27,7 @@ import java.util.function.Function;
 
 public class ScheduledToDoGui extends JFrame implements ActionListener {
 
-    private int sWidth = 750, sHeight = 808;
+    private int sWidth = 760, sHeight = 808;
     private int twoColWidth = sWidth/2 - 20;
     private JPanel panelHeader, panelScheduleType, panelStartDate, panelEndDate, panelScheduleDetails, panelTitle, panelPriority, panelDescription, panelButtons;
     private JScrollPane jScrollPaneScheduleDetails, jspDescription;
@@ -173,18 +173,41 @@ public class ScheduledToDoGui extends JFrame implements ActionListener {
          * add panels to container
          */
 
-        container.add(panelHeader);
-        container.add(panelScheduleType);
-        container.add(panelStartDate);
-        container.add(panelEndDate);
-        container.add(panelPriority);
-        container.add(panelTitle);
-        container.add(panelDescription);
-        container.add(panelScheduleDetails);
-        container.add(panelButtons);
-
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();	//get screen resoloution
+
+        container.add(panelHeader);
+
+        //adjust for smaller screens
+        if(d.height < 850) {
+
+            sHeight -= 200;
+            JPanel main = GuiUtils.createUnborderedPanel(sWidth - 40, 660);
+            main.setLayout(new FlowLayout());
+            JScrollPane mainJsp = GuiUtils.wrapWithScrollPane(sWidth - 10, 445, main);
+            sWidth += 15;
+
+            main.add(panelScheduleType);
+            main.add(panelStartDate);
+            main.add(panelEndDate);
+            main.add(panelPriority);
+            main.add(panelTitle);
+            main.add(panelDescription);
+            main.add(panelScheduleDetails);
+
+            container.add(mainJsp);
+        } else {
+            container.add(panelScheduleType);
+            container.add(panelStartDate);
+            container.add(panelEndDate);
+            container.add(panelPriority);
+            container.add(panelTitle);
+            container.add(panelDescription);
+            container.add(panelScheduleDetails);
+        }
+
         setLocation((d.width-sWidth)/2, (d.height-sHeight)/2);	//centre form
+
+        container.add(panelButtons);
 
         setSize(sWidth,sHeight);	//set form size
         setVisible(true);//display screen

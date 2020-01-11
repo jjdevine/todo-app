@@ -41,6 +41,12 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
 
     public ScheduledToDoViewGui() {
 
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();	//get screen resoloution
+
+        if(d.height < 850) {
+            sHeight -= 200;
+        }
+
         //create container to place components in:
         Container container = getContentPane();
         container.setLayout(new FlowLayout());	//set flow layout
@@ -84,7 +90,7 @@ public class ScheduledToDoViewGui extends JFrame implements ActionListener {
         add(panelHeaders);
         add(jspMain);
 
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();	//get screen resoloution
+
         setLocation((d.width-sWidth)/2, (d.height-sHeight)/2);	//centre form
         setSize(sWidth,sHeight);	//set form size
         setVisible(true);//display screen
