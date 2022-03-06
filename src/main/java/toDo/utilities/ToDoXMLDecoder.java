@@ -125,7 +125,10 @@ public class ToDoXMLDecoder
 		String desc = "";
 		Calendar create = new GregorianCalendar();
 		Calendar lastModified = new GregorianCalendar();
+		ToDoSchedule schedule = null;
 		boolean complete = false;
+
+
 		while(lineNum < arrFile.length)
 		{
 			String tag = getFirstTagValue(arrFile[lineNum]);
@@ -224,6 +227,23 @@ public class ToDoXMLDecoder
 							ex.printStackTrace();
 						}
 					}
+					else if(tag.equalsIgnoreCase("schedule"))
+					{
+						StringBuilder scheduleXml = new StringBuilder();
+						boolean done = false;
+
+						while(true) {
+							scheduleXml.append(arrFile[lineNum] + "\n");
+
+							if(arrFile[lineNum].trim().equalsIgnoreCase("</schedule>")) {
+								break;
+							}
+
+							lineNum++;
+						}
+
+						schedule = ToDoSchedule.buildFromXML(scheduleXml.toString());
+					}
 					else if(tag.equalsIgnoreCase("Log"))
 					{
 						//since end tag is not necessarily on same line, need to increment lines until we find it
@@ -269,6 +289,8 @@ public class ToDoXMLDecoder
 				newItem.setLastModifiedDate(lastModified);
 				newItem.setCompleted(complete);
 				newItem.setId(id);
+				newItem.setSchedule(schedule);
+				schedule = null;
 				
 				/*
 				 * need to filter special charaters in log

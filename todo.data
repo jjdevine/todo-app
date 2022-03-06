@@ -4,14 +4,174 @@
     <Priority>Urgent</Priority>
     <Description>bob</Description>
     <CreateDate>08/09/2019 19:04</CreateDate>
-    <LastModifiedDate>08/09/2019 19:04</LastModifiedDate>
+    <LastModifiedDate>06/03/2022 16:51</LastModifiedDate>
     <Completed>false</Completed>
+	<schedule>
+		<startDate>06/03/2022 16:46</startDate>
+		<nextDueDate>07/03/2022 16:46</nextDueDate>
+		<dayFrequency>1</dayFrequency>
+		<targetPriority>NEXT_PRIORITY</targetPriority>
+		<notify>true</notify>
+	</schedule>
     <Log>AUDIT - Sun Sep 08 19:04:07 BST 2019
 
 To Do Created. 
 Description : bob
 Priority : Urgent
 Comments : bsdfsdf
+
+AUDIT - Sun Mar 06 16:51:35 GMT 2022
+
+Auto Escalated to Urgent
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>2</ID>
+    <Priority>Urgent</Priority>
+    <Description>test</Description>
+    <CreateDate>22/02/2022 18:20</CreateDate>
+    <LastModifiedDate>22/02/2022 18:20</LastModifiedDate>
+    <Completed>false</Completed>
+    <Log>AUDIT - Tue Feb 22 18:20:34 GMT 2022
+
+To Do Created from Schedule
+Description : test
+Priority : URGENT
+Comments : 
+
+schedule
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>3</ID>
+    <Priority>High</Priority>
+    <Description>test</Description>
+    <CreateDate>24/02/2022 21:06</CreateDate>
+    <LastModifiedDate>06/03/2022 16:51</LastModifiedDate>
+    <Completed>false</Completed>
+	<schedule>
+		<startDate>06/03/2022 15:18</startDate>
+		<nextDueDate>12/03/2022 15:18</nextDueDate>
+		<dayFrequency>7</dayFrequency>
+		<targetPriority>NEXT_PRIORITY</targetPriority>
+		<notify>false</notify>
+	</schedule>
+    <Log>AUDIT - Thu Feb 24 21:06:18 GMT 2022
+
+To Do Created from Schedule
+Description : test
+Priority : URGENT
+Comments : 
+
+schedule
+
+AUDIT - Sun Mar 06 16:39:06 GMT 2022
+
+Priority set to : Low
+
+AUDIT - Sun Mar 06 16:46:15 GMT 2022
+
+Auto Escalated to Medium
+
+AUDIT - Sun Mar 06 16:51:39 GMT 2022
+
+Auto Escalated to High
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>4</ID>
+    <Priority>Urgent</Priority>
+    <Description>test</Description>
+    <CreateDate>25/02/2022 21:58</CreateDate>
+    <LastModifiedDate>25/02/2022 21:58</LastModifiedDate>
+    <Completed>false</Completed>
+    <Log>AUDIT - Fri Feb 25 21:58:50 GMT 2022
+
+To Do Created from Schedule
+Description : test
+Priority : URGENT
+Comments : 
+
+schedule
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>5</ID>
+    <Priority>High</Priority>
+    <Description>fgdfgdfgdfg</Description>
+    <CreateDate>25/02/2022 22:01</CreateDate>
+    <LastModifiedDate>06/03/2022 16:51</LastModifiedDate>
+    <Completed>false</Completed>
+	<schedule>
+		<startDate>06/03/2022 16:46</startDate>
+		<nextDueDate>12/03/2022 16:46</nextDueDate>
+		<dayFrequency>7</dayFrequency>
+		<targetPriority>HIGH</targetPriority>
+		<notify>true</notify>
+	</schedule>
+    <Log>AUDIT - Fri Feb 25 22:01:15 GMT 2022
+
+To Do Created. 
+Description : fgdfgdfgdfg
+Priority : High
+Comments : 
+
+AUDIT - Sun Mar 06 16:46:39 GMT 2022
+
+Priority set to : Low
+
+AUDIT - Sun Mar 06 16:51:39 GMT 2022
+
+Auto Escalated to High
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>6</ID>
+    <Priority>Urgent</Priority>
+    <Description>mmm</Description>
+    <CreateDate>25/02/2022 22:02</CreateDate>
+    <LastModifiedDate>06/03/2022 16:51</LastModifiedDate>
+    <Completed>false</Completed>
+	<schedule>
+		<startDate>06/03/2022 16:46</startDate>
+		<nextDueDate>07/03/2022 16:46</nextDueDate>
+		<dayFrequency>1</dayFrequency>
+		<targetPriority>URGENT</targetPriority>
+		<notify>false</notify>
+	</schedule>
+    <Log>AUDIT - Fri Feb 25 22:02:08 GMT 2022
+
+To Do Created. 
+Description : mmm
+Priority : Low
+Comments : 
+
+AUDIT - Sun Mar 06 16:51:42 GMT 2022
+
+Auto Escalated to Urgent
+
+</Log>
+</ToDoItem>
+<ToDoItem>
+    <ID>7</ID>
+    <Priority>Urgent</Priority>
+    <Description>test</Description>
+    <CreateDate>06/03/2022 16:52</CreateDate>
+    <LastModifiedDate>06/03/2022 16:52</LastModifiedDate>
+    <Completed>false</Completed>
+    <Log>AUDIT - Sun Mar 06 16:52:46 GMT 2022
+
+To Do Created from Schedule
+Description : test
+Priority : URGENT
+Comments : 
+
+schedule
 
 </Log>
 </ToDoItem>

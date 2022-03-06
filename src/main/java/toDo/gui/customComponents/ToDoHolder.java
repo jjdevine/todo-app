@@ -2,10 +2,19 @@ package toDo.gui.customComponents;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import toDo.data.ToDoItem;
+import toDo.data.ToDoSchedule;
+import toDo.events.AutoEscalationCommand;
+import toDo.events.ToDoEvent;
+import toDo.events.ToDoObserver;
 import toDo.utilities.*;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 /**
  * purpose of the ToDoHolder class is to create a Swing based representation
@@ -16,12 +25,12 @@ import javax.swing.*;
  * @author jdevine5
  *
  */
-public class ToDoHolder 
+public class ToDoHolder implements ActionListener
 {
 
 	private ToDoItem toDoItem;
 	private JPanel panel;
-	private JButton bPriority, bLog, bCompleted;
+	private JButton bPriority, bLog, bCompleted, bContextMenu;
 	private JTextField tDescription, tCreateDate, tLastModifiedDate;
 	private final int rowHeight = 30;
 	public static final int LOG_AUDIT = 0;
@@ -34,35 +43,47 @@ public class ToDoHolder
 		/*
 		 * create graphical components
 		 */
-		
+
 		panel = new JPanel();
-		panel.setPreferredSize(new Dimension(770,rowHeight));
-		
+		panel.setPreferredSize(new Dimension(820,rowHeight));
+
 		bPriority = new JButton(ToDoItem.priorityAsString(toDoItem.getPriority()));
 		bPriority.setPreferredSize(new Dimension(90,rowHeight-5));
-		
+
 		tDescription = new JTextField(toDoItem.getDescription() + "");
 		tDescription.setPreferredSize(new Dimension(300,rowHeight-5));
 		tDescription.setEditable(false);
 		tDescription.setBackground(Color.WHITE);
-		
+
 		tCreateDate = new JTextField(ToDoUtilities.formatDateToDD_MM_YY_hh_mm(toDoItem.getCreateDate()));
 		tCreateDate.setPreferredSize(new Dimension(90,rowHeight-5));
 		tCreateDate.setEditable(false);
 		tCreateDate.setBackground(Color.WHITE);
-		
+
 		tLastModifiedDate = new JTextField(ToDoUtilities.formatDateToDD_MM_YY_hh_mm(toDoItem.getLastModifiedDate()));
 		tLastModifiedDate.setPreferredSize(new Dimension(90,rowHeight-5));
 		tLastModifiedDate.setEditable(false);
 		tLastModifiedDate.setBackground(Color.WHITE);
-		
+
 		bLog = new JButton("Log");
 		bLog.setPreferredSize(new Dimension(60,rowHeight-5));
 		
 		bCompleted = new JButton("Completed?");
 		bCompleted.setPreferredSize(new Dimension(110,rowHeight-5));
+
+		bContextMenu = new JButton("...");
+		bContextMenu.setPreferredSize(new Dimension(40,rowHeight-5));
 		
 		colourIfUrgent();
+
+		ToDoSchedule schedule = toDoItem.getSchedule();
+
+		if(schedule != null) {
+			bPriority.setBorder(new LineBorder(Color.BLUE, 2));
+			bPriority.setToolTipText("Escalates to " + schedule.getTargetPriority() +
+				" every " + schedule.getDayFrequency() + " day(s)." +
+				"  Next escalation: " + schedule.getNextDueDate().getTime());
+		}
 		
 		/*
 		 * add items to panel
@@ -74,6 +95,13 @@ public class ToDoHolder
 		panel.add(tLastModifiedDate);
 		panel.add(bLog);
 		panel.add(bCompleted);
+		panel.add(bContextMenu);
+
+		/*
+		Add action listeners
+		 */
+
+		bContextMenu.addActionListener(this);
 		
 	}
 	
@@ -185,5 +213,94 @@ public class ToDoHolder
 	public int getPriority()
 	{
 		return toDoItem.getPriority();
+	}
+
+	private List<ToDoObserver> observers = new ArrayList<>();
+	public void addToDoObserver(ToDoObserver o) {
+		observers.add(o);
+	}
+	public void removeToDoObserver(ToDoObserver o) {
+		observers.remove(o);
+	}
+
+	public void fireEvent(ToDoEvent e) {
+		observers.forEach(o -> o.onEvent(e));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == bContextMenu) {
+			String selection = (String)JOptionPane.showInputDialog(
+					bContextMenu,
+					"What do you want to do?",
+					toDoItem.getDescription(),
+					JOptionPane.QUESTION_MESSAGE,
+					null,
+					new String[] {"Configure Auto Escalation", "Cancel Auto Escalation"},
+					"Configure Auto Escalation");
+
+			if(selection == null) {
+				return;
+			}
+
+			switch (selection) {
+				case "Configure Auto Escalation":
+					processConfigureAutoEscalationRequest();
+					break;
+				case "Cancel Auto Escalation":
+					processCancelAutoEscalationRequest();
+					break;
+			}
+		}
+	}
+
+	private void processConfigureAutoEscalationRequest() {
+		ToDoSchedule.TargetPriority typeSelection = (ToDoSchedule.TargetPriority)JOptionPane.showInputDialog(
+				bContextMenu,
+				"What type of auto escalation",
+				toDoItem.getDescription(),
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				ToDoSchedule.TargetPriority.values(),
+				ToDoSchedule.TargetPriority.NEXT_PRIORITY);
+
+		if(typeSelection == null) {
+			return;
+		}
+
+		String frequency = JOptionPane.showInputDialog(bContextMenu, "Escalate how often (days)?", 7);
+
+		if(frequency == null) {
+			return;
+		}
+
+		int intFrequency = 0;
+		try {
+			intFrequency = Integer.parseInt(frequency);
+			if(intFrequency < 1) {
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException ex) {
+			showContextError(frequency + " is not a valid frequency");
+			return;
+		}
+
+		int confirmSelection = JOptionPane.showConfirmDialog(bContextMenu, "Notify when escalation occurs?", toDoItem.getDescription(), JOptionPane.YES_NO_OPTION);
+
+		AutoEscalationCommand command = new AutoEscalationCommand(
+				typeSelection,
+				intFrequency,
+				confirmSelection == JOptionPane.YES_OPTION );
+
+		ToDoEvent event = new ToDoEvent(ToDoEvent.Type.CONFIGURE_AUTO_ESCALATION, command, toDoItem);
+		fireEvent(event);
+	}
+
+	private void processCancelAutoEscalationRequest() {
+		fireEvent(new ToDoEvent(ToDoEvent.Type.CANCEL_AUTO_ESCALATION, null, toDoItem));
+	}
+
+	private void showContextError(String message) {
+		JOptionPane.showMessageDialog(bContextMenu, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 }
