@@ -15,6 +15,7 @@ public class ToDoItem
 	private Calendar lastModifiedDate;
 	private boolean completed;
 	private StringBuilder log;
+	private ToDoSchedule schedule;
 	public static final int PRIORITY_URGENT = 0;
 	public static final int PRIORITY_HIGH = 1;
 	public static final int PRIORITY_MEDIUM = 2;
@@ -133,11 +134,23 @@ public class ToDoItem
 		}
 	}
 
+	public String priorityAsString() {
+		return priorityAsString(priority);
+	}
+
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public ToDoSchedule getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(ToDoSchedule schedule) {
+		this.schedule = schedule;
 	}
 }

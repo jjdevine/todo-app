@@ -901,4 +901,53 @@ public class ToDoUtilities
 		cal.setTimeInMillis(date.getTime());
 		return cal;
 	}
+
+	public static String asXMLElement(String elementName, String value) {
+		String result = "<" + elementName + ">";
+		result += value;
+		result += "</" + elementName + ">";
+
+		return result;
+	}
+
+	/**
+	 * Assumes unique names of elements - ie no repeating blocks
+	 * also values must be on a single line, same line as opening and closing tags
+	 *
+	 * eg imagine input:
+	 * 	<schedule>
+	 * 		<startDate>27/02/2022 21:09</startDate>
+	 * 		<nextDueDate>06/03/2022 21:09</nextDueDate>
+	 * 		<dayFrequency>7</dayFrequency>
+	 * 		<targetPriority>NEXT_PRIORITY</targetPriority>
+	 * 	</schedule>
+	 * @return
+	 */
+	public static Map<String, String> extractXmlAttributes(String xml) {
+
+		String[] lines = xml.split("\n");
+		Map<String, String> output = new HashMap<>();
+
+		for(int x=0; x < lines.length; x++) {
+			String thisLine = lines[x].trim();
+			int startTagIndex = thisLine.indexOf("<");
+			int endTagIndex = thisLine.indexOf(">");
+
+			if(startTagIndex == -1 || endTagIndex == -1) {
+				continue; //no xml tag on this line
+			}
+
+			String tagName = thisLine.substring(startTagIndex+1, endTagIndex);
+			int closeTagIndex = thisLine.indexOf("</" + tagName + ">");
+
+			if(closeTagIndex == -1) {
+				continue; //no closing tag on this line
+			}
+
+			String value = thisLine.substring(endTagIndex+1, closeTagIndex);
+			output.put(tagName, value);
+		}
+
+		return output;
+	}
 }

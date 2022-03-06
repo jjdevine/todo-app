@@ -51,6 +51,7 @@ public class ToDoXMLEncoder
 			Calendar createDate = thisItem.getCreateDate();
 			Calendar lastModifiedDate = thisItem.getLastModifiedDate();
 			boolean completed = thisItem.isCompleted();
+			ToDoSchedule schedule = thisItem.getSchedule();
 			String log = thisItem.getLog().toString();
 			log = log.replaceAll("<", ENCODED_LESS_THAN);
 			log = log.replaceAll(">", ENCODED_GREATER_THAN);
@@ -80,6 +81,10 @@ public class ToDoXMLEncoder
 			sb.append(blankSpaces(4)+"<Completed>");
 			sb.append(completed);
 			sb.append("</Completed>\n");
+
+			if(schedule != null) {
+				sb.append(schedule.toXml() + "\n");
+			}
 			
 			sb.append(blankSpaces(4)+"<Log>");
 			sb.append(log);

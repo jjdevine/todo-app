@@ -14,12 +14,10 @@ import java.util.Timer;
 
 import toDo.alert.Alert;
 import toDo.data.*;
-import toDo.scheduled.AlertProcessor;
-import toDo.scheduled.AlertTimerTask;
-import toDo.scheduled.AutoSaveTimerTask;
-import toDo.scheduled.ScheduledToDoGui;
-import toDo.scheduled.ScheduledToDoTimerTask;
-import toDo.scheduled.ScheduledToDoViewGui;
+import toDo.events.AutoEscalationCommand;
+import toDo.events.ToDoEvent;
+import toDo.events.ToDoObserver;
+import toDo.scheduled.*;
 import toDo.sorts.DescriptionSort;
 import toDo.sorts.PrioritySort;
 import toDo.utilities.*;
@@ -36,14 +34,13 @@ import toDo.gui.customComponents.ToDoHolder;
 import toDo.gui.filterSort.FilterSortMenu;
 import toDo.interfaces.*;
 
-public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Alertable	
-{
+public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Alertable, ToDoObserver {
 
 	private static final long serialVersionUID = 53347349340606524L;
 	public final File saveFile = new File("./todo.data");
 	public final File archiveSaveFile = new File("./todo_archive.data");
 	public final File alertSaveFile = new File("./todo_alerts.data");
-	private int sWidth = 820, sHeight = 800;
+	private int sWidth = 870, sHeight = 800;
 	private JPanel panelHeadings, panelMain;
 	private JMenuBar menuBar;
 	private JMenu fileMenu, aboutMenu, optionsMenu, archiveMenu, helpMenu;
@@ -203,7 +200,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		panelHeadings = new JPanel();
 		panelMain = createNewMainPanel();
 		
-		panelHeadings.setPreferredSize(new Dimension(800,25));
+		panelHeadings.setPreferredSize(new Dimension(850,25));
 		//panelMain.setPreferredSize(mainPanelSize);
 		
 		panelHeadings.setBorder(new LineBorder(Color.BLACK));
@@ -242,7 +239,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 */
 		
 		jsp = new JScrollPane(panelMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(800,690 - adjustment));
+		jsp.setPreferredSize(new Dimension(850,690 - adjustment));
 		
 		container.add(panelHeadings);
 		container.add(jsp);
@@ -266,7 +263,13 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 * scheduled todo checking every 90 seconds
 		 */
 
-		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 90, 1000 * 10);
+		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 90, 1000 * 50);
+
+		/*
+		 * Auto escalation timer
+		 */
+
+		new Timer().scheduleAtFixedRate(new AutoEscalationTimerTask(this), 1000 * 20, 1000 * 12);
 		
 		//autosave every XX Minutes
 		
@@ -366,7 +369,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 					
 					//refresh display
 					refreshToDoDisplay();
-					
 				}
 			}
 		}
@@ -537,7 +539,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		panelMain = createNewMainPanel();
 		
 		jsp = new JScrollPane(panelMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(800,690 - adjustment));
+		jsp.setPreferredSize(new Dimension(850,690 - adjustment));
 		
 		Runnable doScroll = new Runnable() {
             public void run() {
@@ -644,11 +646,12 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			//add actionlisteners to buttons for this todo
 			holder.getBPriority().addActionListener(this);
 			holder.getBLog().addActionListener(this);
-			holder.getBCompleted().addActionListener(this);		
+			holder.getBCompleted().addActionListener(this);
+			holder.addToDoObserver(this);
 		}
 				
-		newMainPanel.setPreferredSize(new Dimension(780,panelHeight));
-		
+		newMainPanel.setPreferredSize(new Dimension(830,panelHeight));
+
 		setTitle("To Do List - " + toDoList_Filtered_Sorted.size() + " of "+ toDoList.size() + " active to do items");
 		return newMainPanel;
 	}
@@ -663,6 +666,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			holder.getBPriority().removeActionListener(this);
 			holder.getBLog().removeActionListener(this);
 			holder.getBCompleted().removeActionListener(this);
+			holder.removeToDoObserver(this);
 		}
 	}
 	
@@ -934,5 +938,24 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		}
 		
 	}
-	
+
+	@Override
+	public void onEvent(ToDoEvent e) {
+
+		if(e.getType() == ToDoEvent.Type.CONFIGURE_AUTO_ESCALATION) {
+			AutoEscalationCommand command = (AutoEscalationCommand) e.getEventInfo();
+			ToDoSchedule schedule = new ToDoSchedule(
+					Calendar.getInstance(),
+					command.getDayFrequency(),
+					command.getTargetPriority(),
+					command.isNotify()
+			);
+
+			e.getToDoItem().setSchedule(schedule);
+			refreshToDoDisplay();
+		} else if(e.getType() == ToDoEvent.Type.CANCEL_AUTO_ESCALATION) {
+			e.getToDoItem().setSchedule(null);
+			refreshToDoDisplay();
+		}
+	}
 }
