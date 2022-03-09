@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class ToDoHolder implements ActionListener
 			bPriority.setBorder(new LineBorder(Color.BLUE, 2));
 			bPriority.setToolTipText("Escalates to " + schedule.getTargetPriority() +
 				" every " + schedule.getDayFrequency() + " day(s)." +
-				"  Next escalation: " + schedule.getNextDueDate().getTime());
+				"  Next escalation: " + DateFormat.getDateInstance().format(schedule.getNextDueDate().getTime()));
 		}
 		
 		/*

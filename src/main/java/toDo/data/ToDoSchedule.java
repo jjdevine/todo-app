@@ -56,6 +56,9 @@ public class ToDoSchedule {
         if(nextDueDate == null) {
             nextDueDate = Calendar.getInstance();
             nextDueDate.setTime(startDate.getTime());
+            nextDueDate.set(Calendar.HOUR_OF_DAY, 0);
+            nextDueDate.set(Calendar.MINUTE, 0);
+            nextDueDate.set(Calendar.SECOND, 0);
             nextDueDate.add(Calendar.DATE, dayFrequency);
             return;
         }
