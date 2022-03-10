@@ -66,6 +66,9 @@ public class ToDoSchedule {
         //roll to next future date in schedule
         while(nextDueDate.before(Calendar.getInstance())) {
             nextDueDate.add(Calendar.DATE, dayFrequency);
+            nextDueDate.set(Calendar.HOUR_OF_DAY, 0);
+            nextDueDate.set(Calendar.MINUTE, 0);
+            nextDueDate.set(Calendar.SECOND, 0);
         }
     }
 
