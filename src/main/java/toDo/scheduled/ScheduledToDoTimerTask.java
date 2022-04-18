@@ -61,7 +61,7 @@ public class ScheduledToDoTimerTask extends TimerTask {
                     scheduledTodo.getToDoPriority());
 
             updatePersistenceModelAfterFire(scheduledTodo);
-            GuiUtils.showInformation("Created new Scheduled ToDo: " + scheduledTodo.getTitle(), "Scheduled ToDo Created");
+            GuiUtils.addInfoMessage("Created new Scheduled ToDo: '" + scheduledTodo.getTitle() + "'", false);
 
             return;
         }
@@ -76,7 +76,7 @@ public class ScheduledToDoTimerTask extends TimerTask {
 
             PersistenceManager.persist(scheduledTodo.toPersistenceModel());
         } catch (IOException ex) {
-            GuiUtils.showError("Error updating scheduled todo - check the logs");
+            GuiUtils.addInfoMessage("Error updating scheduled todo - check the logs", true);
             ex.printStackTrace();
         }
     }

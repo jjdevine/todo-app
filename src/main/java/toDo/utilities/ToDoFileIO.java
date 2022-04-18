@@ -25,7 +25,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem saving to file system : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem saving to file system : " + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 		}
@@ -133,7 +133,7 @@ public class ToDoFileIO
 			}
 			catch(Exception ex)	//error loading file
 			{
-				JOptionPane.showMessageDialog(null, "Problem loading from file system : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem loading from file system : " + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 			
@@ -243,7 +243,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem clearing file : " + f + " " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem clearing file : " + f + " " + ex.getMessage(),true);
 				ex.printStackTrace();
 			}
 		}
@@ -264,7 +264,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem writing ini file : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem writing ini file : " + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 		}
@@ -298,7 +298,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem writing backup file : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem writing backup file : " + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 			
@@ -348,7 +348,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem writing backed up file : " + f + " -" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem writing backed up file : " + f + " -" + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 		}
@@ -406,7 +406,7 @@ public class ToDoFileIO
 		}
 		catch(Exception ex)
 		{
-			JOptionPane.showMessageDialog(null, "Problem removing old files " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			GuiUtils.addInfoMessage("Problem removing old files " + ex.getMessage(), true);
 		}
 	}
 	
@@ -422,7 +422,7 @@ public class ToDoFileIO
 			}
 			catch(IOException ex)
 			{
-				JOptionPane.showMessageDialog(null, "Problem saving to file system : " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				GuiUtils.addInfoMessage("Problem saving to file system : " + ex.getMessage(), true);
 				ex.printStackTrace();
 			}
 		}

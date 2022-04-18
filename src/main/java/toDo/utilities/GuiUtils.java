@@ -1,5 +1,7 @@
 package toDo.utilities;
 
+import toDo.gui.customComponents.AlertPane;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -14,6 +16,13 @@ public class GuiUtils {
         JPanel panel = new JPanel();
         panel.setBorder(new LineBorder(Color.BLACK));
         panel.setPreferredSize(new Dimension(width, height));
+        return panel;
+    }
+
+    public static JPanel createBorderedPanel() {
+
+        JPanel panel = new JPanel();
+        panel.setBorder(new LineBorder(Color.BLACK));
         return panel;
     }
 
@@ -121,6 +130,13 @@ public class GuiUtils {
 
     public static void showInformation(String message, String title) {
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void addInfoMessage(String message, boolean highPriority) {
+        Global.getMainGui().addInfoMessage(
+                highPriority ? AlertPane.AlertType.WARNING : AlertPane.AlertType.INFORMATION,
+                message
+        );
     }
 
     public static JLabel createJLabel(int width, int height, String text, int fontSize) {
