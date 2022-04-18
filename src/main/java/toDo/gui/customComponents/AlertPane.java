@@ -38,9 +38,8 @@ public class AlertPane extends JScrollPane implements ActionListener {
         return height;
     }
 
-    public void addAlert(AlertType type, String message) {
+    public synchronized void addAlert(AlertType type, String message) {
         createAlertMessage(type, message);
-        System.out.println("added alert <" + message + ">");
     }
 
     private void createAlertMessage(AlertType type, String message) {
