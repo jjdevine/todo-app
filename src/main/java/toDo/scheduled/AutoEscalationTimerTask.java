@@ -36,7 +36,7 @@ public class AutoEscalationTimerTask extends TimerTask {
                 schedule.rollToNextDueDate();
                 gui.refreshToDoDisplay();
                 if(shouldNotify) {
-                    GuiUtils.showInformation("To do item " + item.getDescription() + " was automatically prioritised to " + item.priorityAsString(), "Auto Escalation");
+                    GuiUtils.addInfoMessage("To do item '" + item.getDescription() + "' was automatically prioritised to " + item.priorityAsString(), false);
                 }
             }
         }

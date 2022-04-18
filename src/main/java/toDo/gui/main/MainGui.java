@@ -17,6 +17,7 @@ import toDo.data.*;
 import toDo.events.AutoEscalationCommand;
 import toDo.events.ToDoEvent;
 import toDo.events.ToDoObserver;
+import toDo.gui.customComponents.AlertPane;
 import toDo.scheduled.*;
 import toDo.sorts.DescriptionSort;
 import toDo.sorts.PrioritySort;
@@ -53,6 +54,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 	private JLabel lPriority, lDescription, lCreateDate, lLastModified;
 	private Container container;
 	private JScrollPane jsp;
+	private AlertPane alertPane;
 	private int adjustment = 0;
 	private List<ToDoFilter> listFilters = new ArrayList<ToDoFilter>();
 	private List<ToDoSort> listSorts = new ArrayList<ToDoSort>();
@@ -196,7 +198,8 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		/*
 		 * Do Panels
 		 */
-		
+
+		alertPane = new AlertPane(sWidth - 20);
 		panelHeadings = new JPanel();
 		panelMain = createNewMainPanel();
 		
@@ -239,8 +242,9 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 */
 		
 		jsp = new JScrollPane(panelMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(850,690 - adjustment));
-		
+		jsp.setPreferredSize(new Dimension(850, calcJspHeight()));
+
+		container.add(alertPane);
 		container.add(panelHeadings);
 		container.add(jsp);
 
@@ -539,7 +543,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		panelMain = createNewMainPanel();
 		
 		jsp = new JScrollPane(panelMain, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setPreferredSize(new Dimension(850,690 - adjustment));
+		jsp.setPreferredSize(new Dimension(850,calcJspHeight()));
 		
 		Runnable doScroll = new Runnable() {
             public void run() {
@@ -549,12 +553,11 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 
         SwingUtilities.invokeLater(doScroll);
 
-		System.out.println(jsp.getVerticalScrollBar().getValue());
-		
 		panelMain.revalidate();
 		container.add(jsp);
 		container.validate();
 		validate();
+		repaint();
 		
 		/*
 		 * save to disk automatically
@@ -957,5 +960,20 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			e.getToDoItem().setSchedule(null);
 			refreshToDoDisplay();
 		}
+	}
+
+	private int calcJspHeight() {
+		int jspHeight = 690 - adjustment;
+		jspHeight -= alertPane.getHeight();
+		if(alertPane.getHeight() > 0) {
+			jspHeight -= 5; //margin
+		}
+
+		System.out.println("JSP Height is " + jspHeight);
+		return jspHeight;
+	}
+
+	public void addInfoMessage(AlertPane.AlertType type, String message) {
+		alertPane.addAlert(type, message);
 	}
 }

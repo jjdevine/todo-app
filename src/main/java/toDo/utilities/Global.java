@@ -13,4 +13,10 @@ public class Global {
     public static MainGui getMainGui() {
         return mainGui;
     }
+
+    public static void refreshView() {
+        if (mainGui!= null) {
+            mainGui.refreshToDoDisplay();
+        }
+    }
 }

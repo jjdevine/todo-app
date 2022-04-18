@@ -2,8 +2,8 @@ package toDo.scheduled;
 
 import toDo.alert.*;
 import toDo.data.ToDoItem;
-import toDo.gui.alert.AlertBox;
 import toDo.interfaces.ToDoDisplayer;
+import toDo.utilities.GuiUtils;
 import toDo.utilities.ToDoFileIO;
 import toDo.utilities.ToDoUtilities;
 import toDo.utilities.ToDoXMLDecoder;
@@ -79,7 +79,7 @@ public class AlertProcessor
 			item.addToLog(ToDoItem.LOG_ALERT, "Priority set to : " + ToDoItem.priorityAsString(priority));
 			if(notify)
 			{
-				new AlertBox("To Do '" + item.getDescription() + "' changed to priority " + ToDoItem.priorityAsString(priority));
+				GuiUtils.addInfoMessage("To Do '" + item.getDescription() + "' changed to priority " + ToDoItem.priorityAsString(priority), true);
 			}
 			displayer.refreshToDoDisplay();
 			
@@ -91,7 +91,7 @@ public class AlertProcessor
 			item.addToLog(ToDoItem.LOG_ALERT, message);
 			if(notify)
 			{
-				new AlertBox("Message alert for To Do '" + item.getDescription() + "'.\n\n" + message);
+				GuiUtils.addInfoMessage("Message alert for To Do '" + item.getDescription() + "'.\n\n" + message, true);
 			}
 		}
 	}
