@@ -3,6 +3,7 @@ import toDo.alert.Alert;
 import toDo.data.ToDoItem;
 import toDo.gui.customComponents.AlertHolder;
 import toDo.interfaces.*;
+import toDo.utilities.ToDoFileIO;
 import toDo.utilities.ToDoUtilities;
 
 import java.awt.Color;
@@ -24,27 +25,20 @@ public class AlertViewer extends JFrame implements ActionListener {
 	private int sWidth = 740, sHeight = 600;
 	public static final int JSP_HEIGHT = 520;
 	private JPanel panelHeader, panelMain;
-	private List<Alert> listAlerts;
 	private List<AlertHolder> listAlertHolders = new ArrayList<AlertHolder>();
 	private JLabel lDate, lType, lNotify, lToDo;
-	private Alertable alertable;
-	private List<ToDoItem> listToDos;
+	private AlertManager alertManager;
+
 	private JScrollPane jsp = new JScrollPane();
 	
-	public AlertViewer(Alertable alertable, List<ToDoItem> listToDos)
+	public AlertViewer()
 	{
 		super("Active Alerts");	//form heading
 		//create container to place components in:
 		Container container = getContentPane();
 		container.setLayout(new FlowLayout());	//set flow layout
-		
-		/*
-		 * save references
-		 */
-		
-		this.alertable = alertable;
-		this.listToDos = listToDos;
-		listAlerts = alertable.getListAlerts();
+
+		alertManager = AlertManager.getInstance();
 		
 		/*
 		 * create panels
@@ -115,36 +109,19 @@ public class AlertViewer extends JFrame implements ActionListener {
 			if(e.getSource() == holder.getBDetails())
 			{
 				Alert a = holder.getAlert();
-				new AlertDetailsView(a, ToDoUtilities.getToDoByID(a.getToDoID(), listToDos).getDescription());
+				new AlertDetailsView(a, ToDoUtilities.getToDoByID(a.getToDoID()).getDescription());
 			}
 			else if(e.getSource() == holder.getBDelete())
 			{
-				int optionPicked = JOptionPane.showConfirmDialog(this, "Really delete alert on '" + ToDoUtilities.getToDoByID(holder.getAlert().getToDoID(), listToDos).getDescription() + "'?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				int optionPicked = JOptionPane.showConfirmDialog(this, "Really delete alert on '" + ToDoUtilities.getToDoByID(holder.getAlert().getToDoID()).getDescription() + "'?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 				
 				if (optionPicked == JOptionPane.YES_OPTION)
 				{
-					alertable.removeAlert(holder.getAlert());
 					refreshDisplay();
 				}
 			}
 		}
 
-	}
-
-	public List<Alert> getListAlerts() {
-		return listAlerts;
-	}
-
-	public void setListAlerts(List<Alert> listAlerts) {
-		this.listAlerts = listAlerts;
-	}
-
-	public List<ToDoItem> getListToDos() {
-		return listToDos;
-	}
-
-	public void setListToDos(List<ToDoItem> listToDos) {
-		this.listToDos = listToDos;
 	}
 	
 	/**
@@ -165,12 +142,10 @@ public class AlertViewer extends JFrame implements ActionListener {
 		newPanelMain.setLayout(sLayout);
 		
 		/*
-		 * sort list and wrap in holders
+		 * wrap list in holders
 		 */
 		
-		Collections.sort(listAlerts);
-		
-		listAlertHolders = ToDoUtilities.wrapAlerts(listAlerts, listToDos);
+		listAlertHolders = ToDoUtilities.wrapAlerts(alertManager.getAlertList());
 		
 		/*
 		 * add holders to panel
@@ -208,7 +183,7 @@ public class AlertViewer extends JFrame implements ActionListener {
 		
 		newPanelMain.setPreferredSize(new Dimension(sWidth-20, panelHeight));
 		
-		setTitle("Alert List - " + listAlerts.size() + " active alerts");
+		setTitle("Alert List - " + alertManager.getAlertList().size() + " active alerts");
 		
 		return newPanelMain;
 		

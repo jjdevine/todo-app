@@ -10,6 +10,7 @@ public class RunTodo {
 	{
 		MainGui mainGui = new MainGui();
 		Global.setMainGui(mainGui);
+		mainGui.initialiseScheduledProcesses();
 	}
 
 }

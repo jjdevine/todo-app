@@ -4,18 +4,18 @@ import toDo.data.ToDoItem;
 import toDo.data.ToDoSchedule;
 import toDo.gui.customComponents.ToDoHolder;
 import toDo.gui.main.MainGui;
+import toDo.utilities.Global;
 import toDo.utilities.GuiUtils;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimerTask;
 
-public class AutoEscalationTimerTask extends TimerTask {
+public class AutoEscalationScheduledProcess implements TodoScheduledProcess {
 
     private MainGui gui;
 
-    public AutoEscalationTimerTask(MainGui gui) {
-        this.gui = gui;
+    public AutoEscalationScheduledProcess() {
+        this.gui = Global.getMainGui();
     }
 
     @Override

@@ -17,7 +17,6 @@ import toDo.data.*;
 import toDo.exceptions.DateParseException;
 import toDo.gui.customComponents.DateInput;
 import toDo.gui.customComponents.ToDoHolder;
-import toDo.interfaces.Alertable;
 import toDo.interfaces.ToDoDisplayer;
 
 public class PriorityAlertConfigure extends JFrame implements ActionListener
@@ -35,12 +34,11 @@ public class PriorityAlertConfigure extends JFrame implements ActionListener
 	private JCheckBox checkNotify;
 	private JButton bConfirm, bCancel;
 	private ToDoDisplayer source;
-	private Alertable alertable;
 	private List<ToDoItem> listToDos = new ArrayList<ToDoItem>();
 	private DefaultListModel dlm = new DefaultListModel();
 	private String[] priorities = {"Urgent", "High", "Medium", "Low"}; 
 	
-	public PriorityAlertConfigure(ToDoDisplayer source, Alertable alertable)
+	public PriorityAlertConfigure(ToDoDisplayer source)
 	{
 		super("Create a Priority Alert");	//form heading
 		//create container to place components in:
@@ -48,7 +46,6 @@ public class PriorityAlertConfigure extends JFrame implements ActionListener
 		container.setLayout(new FlowLayout());	//set flow layout
 		
 		this.source = source;
-		this.alertable = alertable;
 		
 		/*
 		 * create JPanels
@@ -299,7 +296,7 @@ public class PriorityAlertConfigure extends JFrame implements ActionListener
 					a.setAlertTime(calAlert);
 					a.setNotifier(notify);
 					
-					alertable.addAlert(a);
+					AlertManager.getInstance().addAlert(a);
 					
 					dispose();
 				}

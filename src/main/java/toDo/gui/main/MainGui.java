@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.*;
 import java.util.Timer;
 
-import toDo.alert.Alert;
 import toDo.data.*;
 import toDo.events.AutoEscalationCommand;
 import toDo.events.ToDoEvent;
@@ -35,12 +34,12 @@ import toDo.gui.customComponents.ToDoHolder;
 import toDo.gui.filterSort.FilterSortMenu;
 import toDo.interfaces.*;
 
-public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Alertable, ToDoObserver {
+public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, ToDoObserver {
 
 	private static final long serialVersionUID = 53347349340606524L;
 	public final File saveFile = new File("./todo.data");
 	public final File archiveSaveFile = new File("./todo_archive.data");
-	public final File alertSaveFile = new File("./todo_alerts.data");
+
 	private int sWidth = 870, sHeight = 800;
 	private JPanel panelHeadings, panelMain;
 	private JMenuBar menuBar;
@@ -58,8 +57,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 	private int adjustment = 0;
 	private List<ToDoFilter> listFilters = new ArrayList<ToDoFilter>();
 	private List<ToDoSort> listSorts = new ArrayList<ToDoSort>();
-	private Timer alertTimer, autoSaveTimer;
-	private AlertProcessor processor;
 	
 	public MainGui()
 	{	
@@ -253,33 +250,18 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		
 		setSize(sWidth,sHeight);	//set form size
 		setVisible(true);//display screen
-		
-		processor = new AlertProcessor(alertSaveFile, this);
-		alertTimer = new Timer();
-		autoSaveTimer = new Timer();
-		
+	}
+
+	public void initialiseScheduledProcesses() {
 		/*
-		 * schedule alert checking every minute
+		 * Run after 30 seconds and then every minute
 		 */
-		alertTimer.scheduleAtFixedRate(new AlertTimerTask(processor), 1000 * 5, 1000 * 60);
-
-		/*
-		 * scheduled todo checking every 90 seconds
-		 */
-
-		new Timer().scheduleAtFixedRate(new ScheduledToDoTimerTask(), 1000 * 7, 1000 * 50);
-
-		/*
-		 * Auto escalation timer
-		 */
-
-		new Timer().scheduleAtFixedRate(new AutoEscalationTimerTask(this), 1000 * 9, 1000 * 12);
-		
-		//autosave every XX Minutes
-		
-		int minutes = 60;
-		
-		autoSaveTimer.scheduleAtFixedRate(new AutoSaveTimerTask(this), 1000 * 60 * minutes, 1000 * 60 * minutes);
+		new Timer().scheduleAtFixedRate(new GlobalScheduleManager(
+				new AlertScheduledProcess(),
+				new ScheduledToDoScheduledProcess(),
+				new AutoEscalationScheduledProcess(),
+				new AutoSaveScheduledProcess()
+		), 1000 * 30, 1000 * 60);
 	}
 
 	public void actionPerformed(ActionEvent e) 
@@ -304,17 +286,17 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 			{
 				if(selectedAlert.equals(AlertOptions[0])) //priority alert
 				{
-					new PriorityAlertConfigure(this, this);
+					new PriorityAlertConfigure(this);
 				}
 				else if(selectedAlert.equals(AlertOptions[1])) //message alert
 				{
-					new MessageAlertConfigure(this, this);
+					new MessageAlertConfigure(this);
 				}
 			}
 		}
 		else if(e.getSource() == viewAlertsMenuItem)
 		{
-			new AlertViewer(this, getToDoItemList());
+			new AlertViewer();
 		}
 		
 		else if (e.getSource() == aboutMenuItem)
@@ -493,7 +475,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 				
 				if (e.getSource() == holder.getBCompleted())
 				{
-					new CompleteToDo(holder, this, this);
+					new CompleteToDo(holder, this);
 					break whileLoop;
 				}
 	
@@ -501,7 +483,7 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		}
 	}
 	
-	public void refreshToDoDisplay()
+	public synchronized void refreshToDoDisplay()
 	{	
 		/*
 		 * Save position (fix to bug where position resets to top after refresh)
@@ -563,6 +545,12 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		 * save to disk automatically
 		 */
 		ToDoFileIO.saveToDosAsFile(saveFile, ToDoUtilities.convertHolderListToItemList(toDoList));
+
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			ToDoUtilities.handleException(e);
+		}
 	}
 	
 	public JPanel createNewMainPanel()
@@ -863,38 +851,12 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, Al
 		}
 	}
 
-	public void addAlert(Alert a) 
-	{
-		ToDoFileIO.appendAlertToFile(alertSaveFile, a);
-		
-		//since you are adding a new alert, need to notify the alert
-		//processor so that it can pick it up
-		processor.refreshList();
-		
-	}
-
 	public List<ToDoItem> getToDoItemList() 
 	{
 		
 		return ToDoUtilities.convertHolderListToItemList(toDoList);
 	}
 
-	public List<Alert> getListAlerts()
-	{
-		
-		return processor.getListAlerts();
-	}
-
-	public void removeAlert(Alert a) 
-	{
-		processor.removeAlert(a);	
-	}
-
-	public void removeAllAlertsForID(int id) 
-	{
-		processor.removeAllAlertsForID(id);	
-	}
-	
 	public void createBackup(File backupFile, boolean showMessage)
 	{
 		/*
