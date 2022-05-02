@@ -15,6 +15,7 @@ import toDo.alert.Alert;
 import toDo.common.ToDoPriority;
 import toDo.data.*;
 import toDo.gui.customComponents.AlertHolder;
+import toDo.gui.customComponents.AlertPane;
 import toDo.gui.customComponents.ToDoArchivedHolder;
 import toDo.gui.customComponents.ToDoHolder;
 
@@ -727,7 +728,7 @@ public class ToDoUtilities
 				for(int i=1; i<=1000000; i++)//one million different possible ids
 				{
 					
-					if(!listUsedIds.contains(new Integer(i)))//if id not in use
+					if(!listUsedIds.contains(Integer.valueOf(i)))//if id not in use
 					{
 						/*
 						 * appropriate id found, allocate to this todo and quit
@@ -793,35 +794,28 @@ public class ToDoUtilities
 	 * returns the first todo with a matching id in the list provided. 
 	 * returns null if no match found.
 	 * @param id
-	 * @param listToDos
 	 * @return
 	 */
-	public static ToDoItem getToDoByID(int id, List<ToDoItem> listToDos)
+	public static ToDoItem getToDoByID(int id)
 	{
-		for(ToDoItem item: listToDos)
-		{
-			if (item.getId() == id)
-			{
-				return item;
-			}
-		}
-		return null;
+		return Global.getMainGui().getToDoItemList().stream()
+				.filter(item -> item.getId() == id)
+				.findFirst().get();
 	}
 	
 	/**
 	 * wraps the contents of the provided list of alerts into alert holders,
 	 * then puts them into a list of the correct type and passes them back
 	 * @param listAlert
-	 * @param listToDos
 	 * @return
 	 */
-	public static List<AlertHolder> wrapAlerts(List<Alert> listAlert, List<ToDoItem> listToDos)
+	public static List<AlertHolder> wrapAlerts(List<Alert> listAlert)
 	{
 		List<AlertHolder> listHolder = new ArrayList<AlertHolder>();
 		
 		for(Alert a: listAlert)
 		{
-			listHolder.add(new AlertHolder(a, listToDos));
+			listHolder.add(new AlertHolder(a));
 		}
 		
 		return listHolder;
@@ -949,5 +943,10 @@ public class ToDoUtilities
 		}
 
 		return output;
+	}
+
+	public static void handleException(Throwable ex) {
+		ex.printStackTrace();
+		Global.getMainGui().addInfoMessage(AlertPane.AlertType.WARNING, ex.getMessage());
 	}
 }

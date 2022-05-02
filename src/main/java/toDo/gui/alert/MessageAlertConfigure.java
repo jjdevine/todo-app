@@ -21,7 +21,6 @@ import toDo.data.ToDoItem;
 import toDo.exceptions.DateParseException;
 import toDo.gui.customComponents.DateInput;
 import toDo.gui.customComponents.ToDoHolder;
-import toDo.interfaces.Alertable;
 import toDo.interfaces.ToDoDisplayer;
 
 public class MessageAlertConfigure extends JFrame implements ActionListener {
@@ -37,11 +36,10 @@ public class MessageAlertConfigure extends JFrame implements ActionListener {
 	private DateInput dateInput;
 	private JButton bConfirm, bCancel;
 	private ToDoDisplayer source;
-	private Alertable alertable;
 	private List<ToDoItem> listToDos = new ArrayList<ToDoItem>();
 	private DefaultListModel dlm = new DefaultListModel();
 	
-	public MessageAlertConfigure(ToDoDisplayer source, Alertable alertable)
+	public MessageAlertConfigure(ToDoDisplayer source)
 	{
 		super("Create a Message Alert");	//form heading
 		//create container to place components in:
@@ -49,7 +47,6 @@ public class MessageAlertConfigure extends JFrame implements ActionListener {
 		container.setLayout(new FlowLayout());	//set flow layout
 		
 		this.source = source;
-		this.alertable = alertable;
 		
 		/*
 		 * create JPanels
@@ -273,7 +270,7 @@ public class MessageAlertConfigure extends JFrame implements ActionListener {
 						a.setAlertTime(calAlert);
 						a.setNotifier(true);
 						
-						alertable.addAlert(a);
+						AlertManager.getInstance().addAlert(a);
 						
 						dispose();
 					}

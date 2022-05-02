@@ -17,8 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
+import toDo.gui.alert.AlertManager;
 import toDo.gui.customComponents.ToDoHolder;
-import toDo.interfaces.Alertable;
 
 public class CompleteToDo extends JFrame implements ActionListener
 {
@@ -31,9 +31,8 @@ public class CompleteToDo extends JFrame implements ActionListener
 	private JPanel panelHeader, panelMain;
 	private ToDoHolder holder;
 	private MainGui main;
-	private Alertable alertable;
 
-	public CompleteToDo(ToDoHolder holder, MainGui m, Alertable a)
+	public CompleteToDo(ToDoHolder holder, MainGui m)
 	{
 		super("Completed To Do Item");	//form heading
 		//create container to place components in:
@@ -43,7 +42,6 @@ public class CompleteToDo extends JFrame implements ActionListener
 		//store references
 		this.holder = holder;
 		main = m;
-		alertable = a;
 		
 		panelHeader = new JPanel();
 		panelMain = new JPanel();
@@ -119,7 +117,7 @@ public class CompleteToDo extends JFrame implements ActionListener
 	{
 		if (e.getSource() == bComplete)
 		{
-			alertable.removeAllAlertsForID(holder.getToDoItem().getId());
+			AlertManager.getInstance().removeAlertsForTodoItem(holder.getToDoItem().getId());
 			holder.markComplete(taComments.getText().trim());
 			main.archiveCompletedToDos(main.getToDoList(), false);
 			main.refreshToDoDisplay();			

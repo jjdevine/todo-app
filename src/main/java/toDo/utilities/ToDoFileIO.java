@@ -427,41 +427,7 @@ public class ToDoFileIO
 			}
 		}
 	}
-	
-	public static void appendAlertToFile(File f, Alert a)
-	{
-		if (f!= null)
-		{
-			/*
-			 * easiest to just put the one item in a list
-			 */
-			
-			List<Alert> list = new ArrayList<Alert>();
-			list.add(a);
-			
-			if(f.exists())
-			{
-				try
-				{
-					
-					 
-					PrintWriter out = new PrintWriter(new FileOutputStream(f,true),true);//append
-					out.println(new ToDoXMLEncoder().encodeXMLAlertFile(list));	//write to file
-					out.close();	//close file
-				}
-				catch(Exception ex)
-				{
-					
-				}
-			}
-			else //doesnt exit, need to create it
-			{
-				//need to create full file, so use other method
-				saveAlertsAsFile(f, list);
-			}
-		}
-	}
-	
+
 	/**
 	 * creates a director if it doesnt already exist
 	 * @param dir

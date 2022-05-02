@@ -15,12 +15,10 @@ public class AlertHolder
 	private Alert alert;
 	private JTextField tDate, tType, tNotify, tToDo;
 	private JButton bDetails, bDelete;
-	private List<ToDoItem> listToDos;
 	public static final int rowHeight = 30;
 	
-	public AlertHolder(Alert a, List<ToDoItem> listToDos)
+	public AlertHolder(Alert a)
 	{
-		this.listToDos = listToDos;
 		alert = a;
 		
 		bDetails = new JButton("Details");
@@ -86,7 +84,7 @@ public class AlertHolder
 	
 	public void updateTTodo()
 	{
-		tToDo.setText(ToDoUtilities.getToDoByID(alert.getToDoID(), listToDos).getDescription());
+		tToDo.setText(ToDoUtilities.getToDoByID(alert.getToDoID()).getDescription());
 	}
 	
 	public JPanel getJPanel()
