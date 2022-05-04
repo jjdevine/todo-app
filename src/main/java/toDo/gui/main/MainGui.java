@@ -489,7 +489,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, To
 		 * Save position (fix to bug where position resets to top after refresh)
 		 */
 		final int pos = jsp.getVerticalScrollBar().getValue();
-		System.out.println(pos);
 		/*
 		 * allocate IDs where necessary
 		 */
@@ -930,8 +929,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, To
 		if(alertPane.getHeight() > 0) {
 			jspHeight -= 5; //margin
 		}
-
-		System.out.println("JSP Height is " + jspHeight);
 		return jspHeight;
 	}
 

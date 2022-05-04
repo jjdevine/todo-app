@@ -27,10 +27,18 @@ public class AutoSaveScheduledProcess implements TodoScheduledProcess
 	@Override
 	public void run() 
 	{
+		LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+
+		System.out.println("Last save point: " + lastSavePoint.toString());
+		System.out.println("One Hour ago: " + oneHourAgo);
+
 		//only save if more than an hour since the last save
-		if(lastSavePoint.isAfter(LocalDateTime.now().minusHours(1))) {
+		if(lastSavePoint.isAfter(oneHourAgo)) {
+			System.out.println("No Save required");
 			return;
 		}
+
+
 
 		//create save directory
 		File saveDir = new File(SAVEDIR);
@@ -42,9 +50,9 @@ public class AutoSaveScheduledProcess implements TodoScheduledProcess
 		{
 			System.out.println(f);
 		}
-		System.out.println("********");
 		
 		gui.createBackup(new File(SAVEDIR + "/" + generateFileEnding()), false);
+		lastSavePoint = LocalDateTime.now();
 	}
 	
 	private String generateFileEnding()

@@ -93,9 +93,6 @@ public class AlertPane extends JScrollPane implements ActionListener {
 
         //Not supported but would be nice to show number of messages..
         //System.out.println(Taskbar.getTaskbar().isSupported(Taskbar.Feature.ICON_BADGE_TEXT));
-
-        System.out.println("Rendered - height is " + getHeight());
-        System.out.println(alertPanels.size() + " alerts");
     }
 
 }
