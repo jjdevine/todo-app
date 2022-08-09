@@ -52,21 +52,17 @@ public class AutoEscalationScheduledProcess implements TodoScheduledProcess {
         switch (targetPriority) {
             case URGENT:
                 item.setPriority(ToDoItem.PRIORITY_URGENT);
-                item.addToLog(ToDoItem.LOG_AUDIT, "Auto Escalated to " + item.priorityAsString());
                 break;
             case HIGH:
                 item.setPriority(ToDoItem.PRIORITY_HIGH);
-                item.addToLog(ToDoItem.LOG_AUDIT, "Auto Escalated to " + item.priorityAsString());
                 break;
             case MEDIUM:
                 item.setPriority(ToDoItem.PRIORITY_MEDIUM);
-                item.addToLog(ToDoItem.LOG_AUDIT, "Auto Escalated to " + item.priorityAsString());
                 break;
             case NEXT_PRIORITY:
                 int currentPriority = item.getPriority();
                 if(currentPriority > 0) {
                     item.setPriority(currentPriority-1);
-                    item.addToLog(ToDoItem.LOG_AUDIT, "Auto Escalated to " + item.priorityAsString());
                 } else {
                     shouldNotify = false;
                 }

@@ -23,7 +23,7 @@ public class AboutToDo extends JFrame implements ActionListener
 		Container container = getContentPane();
 		container.setLayout(new FlowLayout());	//set flow layout
 		
-		lVersion = new JLabel("To Do List Version 1.5.1", JLabel.CENTER);
+		lVersion = new JLabel("To Do List Version 1.5.2", JLabel.CENTER);
 		lCreatedBy = new JLabel("Created By Jonathan Devine", JLabel.CENTER);
 		
 		lVersion.setPreferredSize(new Dimension(180,25));

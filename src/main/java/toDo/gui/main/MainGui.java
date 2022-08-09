@@ -461,12 +461,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, To
 			{
 				ToDoHolder holder = (ToDoHolder)i.next();
 				
-				if (e.getSource() == holder.getBPriority()) //change of priority for this todo
-				{
-					new PriorityChange(holder, this);
-					break whileLoop;
-				}
-				
 				if (e.getSource() == holder.getBLog())
 				{
 					new LogToDo(holder, this);
@@ -626,15 +620,12 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, To
 //				need to calculate required height of panel
 				panelHeight += 33;
 			}
-			
-			
-			
+
 			previousRowPanel = newRowPanel;
 			
 			newMainPanel.add(newRowPanel);
 			
 			//add actionlisteners to buttons for this todo
-			holder.getBPriority().addActionListener(this);
 			holder.getBLog().addActionListener(this);
 			holder.getBCompleted().addActionListener(this);
 			holder.addToDoObserver(this);
@@ -653,7 +644,6 @@ public class MainGui extends JFrame implements ActionListener, ToDoDisplayer, To
 		while (i.hasNext() == true)
 		{
 			ToDoHolder holder = (ToDoHolder)i.next();
-			holder.getBPriority().removeActionListener(this);
 			holder.getBLog().removeActionListener(this);
 			holder.getBCompleted().removeActionListener(this);
 			holder.removeToDoObserver(this);

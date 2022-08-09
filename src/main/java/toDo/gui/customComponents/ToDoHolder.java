@@ -102,6 +102,7 @@ public class ToDoHolder implements ActionListener
 		Add action listeners
 		 */
 
+		bPriority.addActionListener(this);
 		bContextMenu.addActionListener(this);
 		
 	}
@@ -117,10 +118,6 @@ public class ToDoHolder implements ActionListener
 
 	public JButton getBLog() {
 		return bLog;
-	}
-
-	public JButton getBPriority() {
-		return bPriority;
 	}
 
 	public ToDoItem getToDoItem() {
@@ -231,27 +228,62 @@ public class ToDoHolder implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == bContextMenu) {
-			String selection = (String)JOptionPane.showInputDialog(
-					bContextMenu,
-					"What do you want to do?",
-					toDoItem.getDescription(),
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					new String[] {"Configure Auto Escalation", "Cancel Auto Escalation"},
-					"Configure Auto Escalation");
+			handleContextMenuClick();
+		} else if(e.getSource() == bPriority) {
+			handlePriorityButtonClick();
+		}
+	}
 
-			if(selection == null) {
-				return;
-			}
+	private void handlePriorityButtonClick() {
+		int selection = JOptionPane.showOptionDialog(
+				bPriority,
+				"New Priority",
+				toDoItem.getDescription(),
+				JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				new String[] {"Urgent", "High", "Medium", "Low"},
+				"Urgent");
 
-			switch (selection) {
-				case "Configure Auto Escalation":
-					processConfigureAutoEscalationRequest();
-					break;
-				case "Cancel Auto Escalation":
-					processCancelAutoEscalationRequest();
-					break;
-			}
+		switch (selection) {
+			case 0:
+				toDoItem.setPriority(ToDoItem.PRIORITY_URGENT);
+				break;
+			case 1:
+				toDoItem.setPriority(ToDoItem.PRIORITY_HIGH);
+				break;
+			case 2:
+				toDoItem.setPriority(ToDoItem.PRIORITY_MEDIUM);
+				break;
+			case 3:
+				toDoItem.setPriority(ToDoItem.PRIORITY_LOW);
+				break;
+		}
+
+		Global.refreshView();
+	}
+
+	private void handleContextMenuClick() {
+		String selection = (String)JOptionPane.showInputDialog(
+				bContextMenu,
+				"What do you want to do?",
+				toDoItem.getDescription(),
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				new String[] {"Configure Auto Escalation", "Cancel Auto Escalation"},
+				"Configure Auto Escalation");
+
+		if(selection == null) {
+			return;
+		}
+
+		switch (selection) {
+			case "Configure Auto Escalation":
+				processConfigureAutoEscalationRequest();
+				break;
+			case "Cancel Auto Escalation":
+				processCancelAutoEscalationRequest();
+				break;
 		}
 	}
 
